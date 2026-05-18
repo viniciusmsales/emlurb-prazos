@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<!--
+  EMLURB – Gestão de Prazos Processuais
+  =======================================
+  COMO HOSPEDAR NO GITHUB PAGES (acesso de qualquer lugar):
+  1. Acesse github.com e crie uma conta gratuita
+  2. Clique em "New repository" → nome: "emlurb-prazos" → Public → Create
+  3. Clique em "uploading an existing file" → arraste este arquivo → renomeie para "index.html"
+  4. Vá em Settings → Pages → Branch: main → Save
+  5. Seu link será: https://SEU_USUARIO.github.io/emlurb-prazos/
+  =======================================
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMLURB – Gestão de Prazos Processuais</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1e3a8a;--blue-l:#3b82f6;
+  --bg:#f1f5f9;--white:#fff;--border:#e2e8f0;
+  --text:#1e293b;--muted:#64748b;
+  --r:8px;--sh:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
+  --sh2:0 4px 12px rgba(0,0,0,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── Header ── */
+.header{background:var(--blue);color:#fff;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;box-shadow:var(--sh2);position:sticky;top:0;z-index:100}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-title{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.header-sub{font-size:11px;opacity:.75;margin-top:1px}
+.header-actions{display:flex;gap:8px}
+
+/* ── Nav ── */
+.nav{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:0;position:sticky;top:58px;z-index:99}
+.nav-btn{padding:13px 18px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--muted);transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-btn:hover{color:var(--blue)}
+.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* ── Main ── */
+.main{padding:24px;max-width:1400px;margin:auto}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── KPI Grid ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+.kpi{background:#fff;border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh);border-left:4px solid transparent}
+.kpi-total{border-color:var(--blue-l)}
+.kpi-vitoria{border-color:#16a34a}
+.kpi-derrota{border-color:#dc2626}
+.kpi-taxa{border-color:#7c3aed}
+.kpi label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
+.kpi .val{font-size:38px;font-weight:700;line-height:1;margin:4px 0}
+.kpi-total .val{color:var(--blue-l)}
+.kpi-vitoria .val{color:#16a34a}
+.kpi-derrota .val{color:#dc2626}
+.kpi-taxa .val{color:#7c3aed}
+.kpi small{font-size:12px;color:var(--muted)}
+
+/* ── Alerts ── */
+.alert{border-radius:var(--r);padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px;border:1px solid}
+.alert-warn{background:#fffbeb;border-color:#fcd34d}
+.alert-danger{background:#fef2f2;border-color:#fca5a5}
+.alert-icon{font-size:22px;flex-shrink:0;line-height:1}
+.alert-title{font-weight:600;font-size:13px;margin-bottom:6px}
+.alert-list{list-style:none}
+.alert-list li{font-size:12px;padding:2px 0;cursor:pointer;color:var(--blue-l);display:flex;align-items:center;gap:6px}
+.alert-list li:hover{text-decoration:underline}
+
+/* ── Section ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{font-size:15px;font-weight:600}
+
+/* ── Card ── */
+.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:20px}
+.card-hdr{padding:13px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between}
+
+/* ── Buttons ── */
+.btn{padding:8px 16px;border-radius:6px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#1e3070}
+.btn-outline{background:#fff;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{background:var(--bg)}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 8px;font-size:13px}
+.btn-ghost:hover{background:var(--bg)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-danger:hover{background:#b91c1c}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.search{flex:1;min-width:200px;padding:8px 13px;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px}
+.search:focus{outline:none;border-color:var(--blue-l)}
+.sel{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;background:#fff;cursor:pointer}
+
+/* ── Table ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:#f8fafc;padding:10px 13px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+tbody td{padding:11px 13px;font-size:12px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#f8fafc}
+
+/* ── Prazo Badges (blue → green → yellow → orange → red → expired) ── */
+.pb{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;letter-spacing:.2px}
+.pb-azul   {background:#dbeafe;color:#1d4ed8}
+.pb-verde  {background:#dcfce7;color:#15803d}
+.pb-amarelo{background:#fef9c3;color:#854d0e}
+.pb-laranja{background:#ffedd5;color:#9a3412}
+.pb-vermelho{background:#fee2e2;color:#991b1b}
+.pb-vencido{background:#7f1d1d;color:#fff}
+.pb-encerrado{background:#f3f4f6;color:#6b7280}
+
+/* ── Status Badges ── */
+.sb{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.sb-andamento{background:#dbeafe;color:#1d4ed8}
+.sb-vitoria  {background:#dcfce7;color:#15803d}
+.sb-derrota  {background:#fee2e2;color:#991b1b}
+.sb-suspenso {background:#f3f4f6;color:#6b7280}
+
+/* ── Honorários dot ── */
+.hdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f59e0b;margin-left:4px;vertical-align:middle;cursor:help}
+
+/* ── Process number ── */
+.pnum{font-family:'Courier New',monospace;font-size:11px}
+
+/* ── Form ── */
+.form-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--sh);max-width:620px;margin:auto}
+.form-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.form-hdr h2{font-size:17px;font-weight:600}
+.form-body{padding:24px}
+.form-foot{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+.fg{margin-bottom:15px}
+.fg label{display:block;font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text);text-transform:uppercase;letter-spacing:.4px}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:#fff}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--blue-l);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.fg textarea{min-height:68px;resize:vertical}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fcheck{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;margin-top:8px}
+.fcheck input{width:auto}
+.required-note{font-size:11px;color:var(--muted);margin-bottom:16px}
+
+/* ── Empty state ── */
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .ei{font-size:44px;margin-bottom:10px}
+.empty p{font-size:15px;margin-bottom:6px}
+.empty small{font-size:12px}
+
+/* ── Urgency mini-bar ── */
+.urg-row{display:flex;gap:6px;flex-wrap:wrap;padding:14px 18px}
+.urg-pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer}
+.urg-pill:hover{opacity:.8}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);font-weight:600;font-size:16px}
+.modal-body{padding:20px 22px}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+
+/* ── Info box ── */
+.infobox{background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--r);padding:14px 16px;font-size:12px;color:#1e40af;margin-bottom:20px;line-height:1.6}
+.infobox strong{font-weight:600}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .header{padding:0 14px}
+  .nav{padding:0 10px;overflow-x:auto}
+  .main{padding:14px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .frow{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .header-title{font-size:14px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .kpi .val{font-size:30px}
+  thead th:nth-child(2),tbody td:nth-child(2){display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <span style="font-size:22px">⚖️</span>
+    <div>
+      <div class="header-title">EMLURB — Gestão de Prazos</div>
+      <div class="header-sub">Feriados TJPE 2025–2026 · Art. 219 CPC</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline btn-sm" onclick="exportar()" title="Baixar backup JSON">↓ Exportar</button>
+    <button class="btn btn-outline btn-sm" onclick="document.getElementById('impFile').click()" title="Restaurar de backup JSON">↑ Importar</button>
+    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importar(event)">
+  </div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="tab('dashboard')" id="nt-dashboard">📊 Dashboard</button>
+  <button class="nav-btn" onclick="tab('processos')" id="nt-processos">📁 Processos</button>
+  <button class="nav-btn" onclick="tab('novo')" id="nt-novo">＋ Novo Processo</button>
+</nav>
+
+<main class="main">
+
+<!-- ═══════════════ DASHBOARD ═══════════════ -->
+<div id="tab-dashboard" class="tab-content active">
+  <div class="kpi-grid" id="kpiGrid"></div>
+  <div id="alertHonorarios"></div>
+  <div id="alertCriticos"></div>
+  <div class="card">
+    <div class="card-hdr">
+      📅 Próximos vencimentos (processos em andamento)
+      <span id="dashCount" style="font-size:11px;color:var(--muted);font-weight:400"></span>
+    </div>
+    <div id="dashTabela"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PROCESSOS ═══════════════ -->
+<div id="tab-processos" class="tab-content">
+  <div class="sec-hdr">
+    <span class="sec-title" id="listTitle">Processos</span>
+    <button class="btn btn-primary" onclick="tab('novo')">＋ Novo Processo</button>
+  </div>
+  <div class="toolbar">
+    <input type="text" class="search" id="srch" placeholder="Buscar processo, SEI, parte contrária…" oninput="renderLista()">
+    <select class="sel" id="fStatus" onchange="renderLista()">
+      <option value="">Todos os status</option>
+      <option value="andamento">Em andamento</option>
+      <option value="vitoria">Vitórias</option>
+      <option value="derrota">Derrotas</option>
+      <option value="suspenso">Suspenso</option>
+    </select>
+    <select class="sel" id="fUrg" onchange="renderLista()">
+      <option value="">Qualquer prazo</option>
+      <option value="hoje">Vence hoje</option>
+      <option value="critico">Crítico (≤ 2 dias)</option>
+      <option value="urgente">Urgente (≤ 5 dias)</option>
+      <option value="atencao">Atenção (≤ 10 dias)</option>
+      <option value="vencido">Vencidos</option>
+    </select>
+  </div>
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nº Processo</th>
+            <th>SEI</th>
+            <th>Parte Contrária</th>
+            <th>Disponibilização</th>
+            <th>Data Final</th>
+            <th>Prazo Restante</th>
+            <th>O que fazer</th>
+            <th>Status</th>
+            <th style="width:80px">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="listaBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ FORMULÁRIO ═══════════════ -->
+<div id="tab-novo" class="tab-content">
+  <div class="form-wrap">
+    <div class="form-hdr">
+      <h2 id="formTitulo">Novo Processo</h2>
+    </div>
+    <div class="form-body">
+      <p class="required-note">Campos com * são obrigatórios</p>
+      <form id="fForm" onsubmit="salvar(event)">
+        <input type="hidden" id="fId">
+        <div class="frow">
+          <div class="fg">
+            <label>Nº do Processo *</label>
+            <input type="text" id="fProc" placeholder="0000000-00.0000.0.00.0000" required>
+          </div>
+          <div class="fg">
+            <label>Nº SEI</label>
+            <input type="text" id="fSEI" placeholder="0000.0000.000000/0000-00">
+          </div>
+        </div>
+        <div class="fg">
+          <label>Parte Contrária *</label>
+          <input type="text" id="fParte" required placeholder="Nome da parte ou representante legal">
+        </div>
+        <div class="frow">
+          <div class="fg">
+            <label>Data de Disponibilização *</label>
+            <input type="date" id="fDisp" required>
+          </div>
+          <div class="fg">
+            <label>Prazo (dias) *</label>
+            <input type="number" id="fPrazo" min="1" max="365" required placeholder="Ex: 15">
+          </div>
+        </div>
+        <div class="fg">
+          <label>Tipo de contagem</label>
+          <select id="fTipo">
+            <option value="uteis">Dias úteis (Art. 219 CPC)</option>
+            <option value="corridos">Dias corridos</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>O que fazer no prazo *</label>
+          <textarea id="fAcao" required placeholder="Ex: Apresentar contestação · Interpor Apelação · Juntar documentos…"></textarea>
+        </div>
+        <div class="frow">
+          <div class="fg">
+            <label>Status do processo</label>
+            <select id="fStatusForm" onchange="toggleHon()">
+              <option value="andamento">Em andamento</option>
+              <option value="vitoria">Vitória</option>
+              <option value="derrota">Derrota</option>
+              <option value="suspenso">Suspenso / aguardando</option>
+            </select>
+          </div>
+          <div class="fg" id="honGroup" style="display:none">
+            <label>Honorários de êxito</label>
+            <label class="fcheck">
+              <input type="checkbox" id="fHon">
+              Pendente de execução
+            </label>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Observações</label>
+          <textarea id="fObs" placeholder="Notas, histórico, links, comarca, juiz…"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+          <button type="button" class="btn btn-outline" onclick="cancelar()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">💾 Salvar Processo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══════════════ MODAL DETALHE ═══════════════ -->
+<div id="modalObs" class="modal-overlay" style="display:none" onclick="if(event.target===this)fecharModal()">
+  <div class="modal">
+    <div class="modal-hdr" id="modalTitulo">Observações</div>
+    <div class="modal-body" id="modalConteudo"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="fecharModal()">Fechar</button>
+      <button class="btn btn-primary" id="modalEditBtn">✏️ Editar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  FERIADOS (TJPE 2025 nacionais + TJPE 2026 completo)
+// ══════════════════════════════════════════════════════
+const FER = new Set([
+  // Nacionais 2025
+  "2025-01-01",
+  "2025-03-03","2025-03-04","2025-03-05",
+  "2025-04-18","2025-04-21","2025-05-01","2025-06-19",
+  "2025-09-07","2025-10-12","2025-11-02","2025-11-15","2025-11-20",
+  "2025-12-25",
+  // TJPE 2026 (calendário oficial)
+  "2026-01-01","2026-01-02","2026-01-03","2026-01-04","2026-01-05","2026-01-06",
+  "2026-02-16","2026-02-17","2026-02-18",
+  "2026-03-06",
+  "2026-04-02","2026-04-03","2026-04-21",
+  "2026-05-01",
+  "2026-06-23","2026-06-25","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30",
+  "2026-07-16",
+  "2026-09-07",
+  "2026-10-12","2026-10-30",
+  "2026-11-02","2026-11-15","2026-11-20",
+  "2026-12-08",
+  "2026-12-20","2026-12-21","2026-12-22","2026-12-23","2026-12-24",
+  "2026-12-26","2026-12-27","2026-12-28","2026-12-29","2026-12-30","2026-12-31"
+])
+
+// ══════════════════════════════════════════════════════
+//  UTILITÁRIOS DE DATA
+// ══════════════════════════════════════════════════════
+function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()) }
+function pad(n){ return String(n).padStart(2,'0') }
+function parse(s){ return new Date(s+'T12:00:00') }
+function feriado(d){ return FER.has(iso(d)) }
+function fimSemana(d){ let w=d.getDay(); return w===0||w===6 }
+function util(d){ return !fimSemana(d)&&!feriado(d) }
+
+function proxUtil(d){
+  let r=new Date(d)
+  do{ r.setDate(r.getDate()+1) }while(!util(r))
+  return r
+}
+
+function calcFinal(dispStr, prazo, tipo){
+  let disp=parse(dispStr)
+  let pub=proxUtil(disp)
+  let ini=proxUtil(pub)
+  let cnt=0, cur=new Date(ini)
+  for(let i=0;i<600;i++){
+    if(tipo==='corridos'||util(cur)){
+      cnt++
+      if(cnt===prazo) return iso(cur)
+    }
+    cur.setDate(cur.getDate()+1)
+  }
+  return null
+}
+
+function diasRestantes(finalStr, tipo){
+  let hoje=new Date(); hoje.setHours(12,0,0,0)
+  let fim=parse(finalStr)
+  let hISO=iso(hoje), fISO=finalStr
+  if(hISO===fISO) return 0
+  if(tipo==='corridos'){
+    return Math.round((fim-hoje)/86400000)
+  }
+  if(fISO>hISO){
+    let c=0,d=new Date(hoje); d.setDate(d.getDate()+1)
+    while(iso(d)<=fISO){ if(util(d))c++; d.setDate(d.getDate()+1) }
+    return c
+  } else {
+    let c=0,d=new Date(fim); d.setDate(d.getDate()+1)
+    while(iso(d)<=hISO){ if(util(d))c++; d.setDate(d.getDate()+1) }
+    return -(c||1)
+  }
+}
+
+function badge(p){
+  if(p.status!=='andamento'||!p.dataFinal) return null
+  let hoje=new Date(); hoje.setHours(12,0,0,0)
+  let hISO=iso(hoje)
+  if(p.dataFinal<hISO) return {label:'VENCIDO',cls:'pb-vencido',dias:-999}
+  let dias=diasRestantes(p.dataFinal,p.tipoPrazo)
+  let suf=p.tipoPrazo==='uteis'?(dias===1?'dia útil':'dias úteis'):(dias===1?'dia':'dias')
+  if(dias===0) return {label:'Vence HOJE',cls:'pb-vermelho',dias:0}
+  let cls=dias<=2?'pb-vermelho':dias<=5?'pb-laranja':dias<=8?'pb-amarelo':dias<=12?'pb-verde':'pb-azul'
+  return {label:`${dias} ${suf}`,cls,dias}
+}
+
+// ══════════════════════════════════════════════════════
+//  STORAGE
+// ══════════════════════════════════════════════════════
+const KEY='emlurb_v2'
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]') }catch{return[]} }
+function save(ps){ localStorage.setItem(KEY,JSON.stringify(ps)) }
+function all(){ return load() }
+function get(id){ return all().find(p=>p.id===id) }
+function upsert(p){ let ps=all(); let i=ps.findIndex(x=>x.id===p.id); i>=0?ps[i]=p:ps.push(p); save(ps) }
+function del(id){ save(all().filter(p=>p.id!==id)) }
+
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+function tab(name){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'))
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'))
+  document.getElementById('tab-'+name).classList.add('active')
+  document.getElementById('nt-'+name).classList.add('active')
+  if(name==='dashboard') renderDash()
+  if(name==='processos') renderLista()
+  if(name==='novo'){
+    document.getElementById('formTitulo').textContent='Novo Processo'
+    document.getElementById('fForm').reset()
+    document.getElementById('fId').value=''
+    toggleHon()
+    window.scrollTo(0,0)
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDash(){
+  let ps=all()
+  let total=ps.length
+  let vit=ps.filter(p=>p.status==='vitoria').length
+  let der=ps.filter(p=>p.status==='derrota').length
+  let and=ps.filter(p=>p.status==='andamento').length
+  let taxa=vit+der>0?Math.round(vit/(vit+der)*100):0
+
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi kpi-total"><label>Total de Processos</label><div class="val">${total}</div><small>${and} em andamento</small></div>
+    <div class="kpi kpi-vitoria"><label>Vitórias</label><div class="val">${vit}</div><small>processos encerrados</small></div>
+    <div class="kpi kpi-derrota"><label>Derrotas</label><div class="val">${der}</div><small>processos encerrados</small></div>
+    <div class="kpi kpi-taxa"><label>Taxa de Êxito</label><div class="val">${taxa}%</div><small>${vit+der} encerrados no total</small></div>
+  `
+
+  // Honorários pendentes
+  let hon=ps.filter(p=>p.status==='vitoria'&&p.honorariosPendentes)
+  document.getElementById('alertHonorarios').innerHTML=hon.length?`
+    <div class="alert alert-warn">
+      <div class="alert-icon">💰</div>
+      <div>
+        <div class="alert-title">Honorários de êxito pendentes — ${hon.length} processo(s)</div>
+        <ul class="alert-list">
+          ${hon.map(p=>`<li onclick="abrirModal('${p.id}')">📌 ${p.numeroProcesso} — ${p.parteContraria}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `:''
+
+  // Críticos
+  let crit=ps.filter(p=>p.status==='andamento'&&p.dataFinal)
+    .map(p=>({...p,b:badge(p)}))
+    .filter(p=>p.b&&p.b.dias<=2)
+    .sort((a,b)=>a.b.dias-b.b.dias)
+
+  document.getElementById('alertCriticos').innerHTML=crit.length?`
+    <div class="alert alert-danger">
+      <div class="alert-icon">🚨</div>
+      <div>
+        <div class="alert-title">Prazos críticos — vencem em até 2 dias úteis (${crit.length})</div>
+        <ul class="alert-list">
+          ${crit.map(p=>`<li onclick="abrirModal('${p.id}')"><span class="pb ${p.b.cls}">${p.b.label}</span> ${p.numeroProcesso} — ${p.parteContraria}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `:''
+
+  // Tabela próximos vencimentos
+  let prox=ps.filter(p=>p.status==='andamento'&&p.dataFinal)
+    .map(p=>({...p,b:badge(p)}))
+    .filter(p=>p.b)
+    .sort((a,b)=>a.b.dias-b.b.dias)
+
+  document.getElementById('dashCount').textContent=`${prox.length} processo(s)`
+
+  if(!prox.length){
+    document.getElementById('dashTabela').innerHTML='<div class="empty"><div class="ei">✅</div><p>Nenhum processo em andamento</p><small>Adicione processos na aba "Novo Processo"</small></div>'
+    return
+  }
+
+  document.getElementById('dashTabela').innerHTML=`
+    <div class="tbl-wrap"><table>
+      <thead><tr>
+        <th>Prazo Restante</th><th>Nº Processo</th><th>Parte Contrária</th>
+        <th>Data Final</th><th>O que fazer</th>
+      </tr></thead>
+      <tbody>${prox.map(p=>`
+        <tr style="cursor:pointer" onclick="abrirModal('${p.id}')">
+          <td><span class="pb ${p.b.cls}">${p.b.label}</span></td>
+          <td><span class="pnum">${p.numeroProcesso}</span></td>
+          <td>${p.parteContraria}</td>
+          <td>${fmt(p.dataFinal)}</td>
+          <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.oQueFazer}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>
+  `
+}
+
+// ══════════════════════════════════════════════════════
+//  LISTA DE PROCESSOS
+// ══════════════════════════════════════════════════════
+function renderLista(){
+  let ps=all()
+  let q=document.getElementById('srch').value.toLowerCase()
+  let fs=document.getElementById('fStatus').value
+  let fu=document.getElementById('fUrg').value
+
+  if(q) ps=ps.filter(p=>
+    p.numeroProcesso.toLowerCase().includes(q)||
+    (p.numeroSEI||'').toLowerCase().includes(q)||
+    p.parteContraria.toLowerCase().includes(q)||
+    (p.oQueFazer||'').toLowerCase().includes(q)
+  )
+  if(fs) ps=ps.filter(p=>p.status===fs)
+  if(fu) ps=ps.filter(p=>{
+    if(p.status!=='andamento'||!p.dataFinal) return fu==='vencido'&&p.status!=='andamento'?false:false
+    let b=badge(p); if(!b) return false
+    if(fu==='hoje') return b.dias===0
+    if(fu==='critico') return b.dias<=2
+    if(fu==='urgente') return b.dias<=5
+    if(fu==='atencao') return b.dias<=10
+    if(fu==='vencido') return b.dias<0
+    return true
+  })
+
+  ps.sort((a,b)=>{
+    let ba=badge(a), bb=badge(b)
+    if(!ba&&!bb) return 0; if(!ba) return 1; if(!bb) return -1
+    return ba.dias-bb.dias
+  })
+
+  document.getElementById('listTitle').textContent=`${ps.length} processo(s)`
+
+  let tbody=document.getElementById('listaBody')
+  if(!ps.length){
+    tbody.innerHTML=`<tr><td colspan="9"><div class="empty"><div class="ei">📂</div><p>Nenhum resultado</p><small>Tente ajustar os filtros</small></div></td></tr>`
+    return
+  }
+
+  tbody.innerHTML=ps.map(p=>{
+    let b=badge(p)
+    let prazoCell=b
+      ?`<span class="pb ${b.cls}">${b.label}</span>`
+      :`<span class="pb pb-encerrado">—</span>`
+    let hdot=p.status==='vitoria'&&p.honorariosPendentes
+      ?`<span class="hdot" title="Honorários pendentes de execução"></span>`:''
+    return `<tr>
+      <td><span class="pnum">${p.numeroProcesso}</span></td>
+      <td><span class="pnum">${p.numeroSEI||'—'}</span></td>
+      <td>${p.parteContraria}</td>
+      <td>${fmt(p.dataDisponibilizacao)}</td>
+      <td>${fmt(p.dataFinal)}</td>
+      <td>${prazoCell}</td>
+      <td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.oQueFazer}">${p.oQueFazer}</td>
+      <td><span class="sb sb-${p.status}">${slabel(p.status)}</span>${hdot}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-ghost btn-sm" onclick="editar('${p.id}')" title="Editar">✏️</button>
+          <button class="btn btn-ghost btn-sm" onclick="confirmarDel('${p.id}')" title="Excluir">🗑️</button>
+        </div>
+      </td>
+    </tr>`
+  }).join('')
+}
+
+// ══════════════════════════════════════════════════════
+//  FORMULÁRIO
+// ══════════════════════════════════════════════════════
+function toggleHon(){
+  let s=document.getElementById('fStatusForm').value
+  document.getElementById('honGroup').style.display=s==='vitoria'?'block':'none'
+}
+
+function salvar(e){
+  e.preventDefault()
+  let id=document.getElementById('fId').value||crypto.randomUUID()
+  let dispStr=document.getElementById('fDisp').value
+  let prazo=parseInt(document.getElementById('fPrazo').value)
+  let tipo=document.getElementById('fTipo').value
+  let dataFinal=calcFinal(dispStr,prazo,tipo)
+
+  let p={
+    id,
+    numeroProcesso:document.getElementById('fProc').value.trim(),
+    numeroSEI:document.getElementById('fSEI').value.trim(),
+    parteContraria:document.getElementById('fParte').value.trim(),
+    dataDisponibilizacao:dispStr,
+    prazo,tipoPrazo:tipo,
+    oQueFazer:document.getElementById('fAcao').value.trim(),
+    status:document.getElementById('fStatusForm').value,
+    honorariosPendentes:document.getElementById('fHon').checked,
+    observacoes:document.getElementById('fObs').value.trim(),
+    dataFinal,
+    updatedAt:new Date().toISOString()
+  }
+
+  let existing=get(id)
+  p.createdAt=existing?existing.createdAt:new Date().toISOString()
+
+  upsert(p)
+  tab('processos')
+}
+
+function editar(id){
+  let p=get(id); if(!p) return
+  document.getElementById('formTitulo').textContent='Editar Processo'
+  document.getElementById('fId').value=p.id
+  document.getElementById('fProc').value=p.numeroProcesso||''
+  document.getElementById('fSEI').value=p.numeroSEI||''
+  document.getElementById('fParte').value=p.parteContraria||''
+  document.getElementById('fDisp').value=p.dataDisponibilizacao||''
+  document.getElementById('fPrazo').value=p.prazo||''
+  document.getElementById('fTipo').value=p.tipoPrazo||'uteis'
+  document.getElementById('fAcao').value=p.oQueFazer||''
+  document.getElementById('fStatusForm').value=p.status||'andamento'
+  document.getElementById('fHon').checked=p.honorariosPendentes||false
+  document.getElementById('fObs').value=p.observacoes||''
+  toggleHon()
+  tab('novo')
+  window.scrollTo(0,0)
+}
+
+function cancelar(){ tab('processos') }
+
+function confirmarDel(id){
+  let p=get(id); if(!p) return
+  if(confirm(`Excluir o processo ${p.numeroProcesso}?\n\nEsta ação não pode ser desfeita.`)){
+    del(id); renderLista(); renderDash()
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  MODAL DE DETALHE
+// ══════════════════════════════════════════════════════
+function abrirModal(id){
+  let p=get(id); if(!p) return
+  let b=badge(p)
+  document.getElementById('modalTitulo').textContent=p.numeroProcesso
+  document.getElementById('modalConteudo').innerHTML=`
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      ${row('Nº Processo',`<span class="pnum">${p.numeroProcesso}</span>`)}
+      ${row('SEI',p.numeroSEI||'—')}
+      ${row('Parte Contrária',p.parteContraria)}
+      ${row('Disponibilização',fmt(p.dataDisponibilizacao))}
+      ${row('Prazo',`${p.prazo} ${p.tipoPrazo==='uteis'?'dias úteis':'dias corridos'}`)}
+      ${row('Data Final',`<strong>${fmt(p.dataFinal)}</strong>`)}
+      ${row('Prazo Restante',b?`<span class="pb ${b.cls}">${b.label}</span>`:'—')}
+      ${row('O que fazer',p.oQueFazer)}
+      ${row('Status',`<span class="sb sb-${p.status}">${slabel(p.status)}</span>${p.status==='vitoria'&&p.honorariosPendentes?'<span class="hdot" style="margin-left:8px" title="Honorários pendentes"></span> <em style="font-size:11px;color:#f59e0b">Honorários pendentes</em>':''}`)}
+      ${p.observacoes?row('Observações',p.observacoes):''}
+    </table>
+  `
+  document.getElementById('modalEditBtn').onclick=()=>{ fecharModal(); editar(id) }
+  document.getElementById('modalObs').style.display='flex'
+}
+
+function row(k,v){ return `<tr><td style="padding:8px 0;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;width:140px;vertical-align:top">${k}</td><td style="padding:8px 0">${v}</td></tr>` }
+function fecharModal(){ document.getElementById('modalObs').style.display='none' }
+
+// ══════════════════════════════════════════════════════
+//  IMPORT / EXPORT
+// ══════════════════════════════════════════════════════
+function exportar(){
+  let data={version:2,exportedAt:new Date().toISOString(),processos:all()}
+  let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'})
+  let a=document.createElement('a')
+  a.href=URL.createObjectURL(blob)
+  a.download=`emlurb-backup-${iso(new Date())}.json`
+  a.click()
+}
+
+function importar(ev){
+  let f=ev.target.files[0]; if(!f) return
+  let r=new FileReader()
+  r.onload=e=>{
+    try{
+      let d=JSON.parse(e.target.result)
+      let ps=d.processos||d
+      if(!Array.isArray(ps)) throw new Error('Formato inválido')
+      if(confirm(`Importar ${ps.length} processo(s)?\n\nIsso substituirá todos os dados atuais.`)){
+        save(ps); renderDash(); alert(`${ps.length} processo(s) importado(s).`)
+      }
+    }catch(err){ alert('Erro: '+err.message) }
+  }
+  r.readAsText(f)
+  ev.target.value=''
+}
+
+// ══════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════
+function fmt(s){ if(!s) return '—'; let[y,m,d]=s.split('-'); return `${d}/${m}/${y}` }
+function slabel(s){ return{andamento:'Em andamento',vitoria:'Vitória',derrota:'Derrota',suspenso:'Suspenso'}[s]||s }
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+renderDash()
+</script>
+</body>
+</html>
