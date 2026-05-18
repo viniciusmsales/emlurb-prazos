@@ -188,10 +188,10 @@ tbody tr:hover{background:#f8fafc}
           <div class="fg"><label>N&ordm; do Processo *</label><input type="text" id="fProc" placeholder="0000000-00.0000.0.00.0000" required></div>
           <div class="fg"><label>N&ordm; SEI</label><input type="text" id="fSEI" placeholder="15.000000/0000-00"></div>
         </div>
-        <div class="fg"><label>Parte Contrária *</label><input type="text" id="fParte" required placeholder="Nome da parte ou representante legal"></div>
+        <div class="fg"><label>Parte Contrária *</label><input type="text" id="fParte" placeholder="Nome da parte ou representante legal"></div>
         <div class="frow">
-          <div class="fg"><label>Data de Disponibilização *</label><input type="date" id="fDisp" required></div>
-          <div class="fg"><label>Prazo (dias) *</label><input type="number" id="fPrazo" min="1" max="365" required placeholder="Ex: 15"></div>
+          <div class="fg"><label>Data de Disponibilização *</label><input type="date" id="fDisp"></div>
+          <div class="fg"><label>Prazo (dias) *</label><input type="number" id="fPrazo" min="1" max="365" placeholder="Ex: 15"></div>
         </div>
         <div class="fg"><label>Tipo de contagem</label>
           <select id="fTipo">
@@ -199,7 +199,7 @@ tbody tr:hover{background:#f8fafc}
             <option value="corridos">Dias corridos</option>
           </select>
         </div>
-        <div class="fg"><label>O que fazer no prazo *</label><textarea id="fAcao" required placeholder="Ex: Apresentar contestação / Recurso de Apelação..."></textarea></div>
+        <div class="fg"><label>O que fazer no prazo *</label><textarea id="fAcao" placeholder="Ex: Apresentar contestação / Recurso de Apelação..."></textarea></div>
         <div class="frow">
           <div class="fg"><label>Status do processo</label>
             <select id="fStatusForm" onchange="toggleHon()">
@@ -340,6 +340,24 @@ function editar(id){
   document.getElementById('fHon').checked=p.honorariosPendentes||false
   document.getElementById('fObs').value=p.observacoes||''
   toggleHon();tab('novo');window.scrollTo(0,0)
+}
+function cumprir(id){
+  var p=get(id);if(!p)return
+  var hoje=new Date();var dd=String(hoje.getDate()).padStart(2,'0');var mm=String(hoje.getMonth()+1).padStart(2,'0');var aaaa=hoje.getFullYear()
+  var dataHoje=dd+'/'+mm+'/'+aaaa
+  var acao=p.oQueFazer?p.oQueFazer:'prazo'
+  if(!confirm('Marcar como CUMPRIDO em '+dataHoje+'?
+
+"'+acao+'"'))return
+  p.dataDisponibilizacao=''
+  p.prazo=null
+  p.dataFinal=null
+  p.status='suspenso'
+  var nota='[Cumprido em '+dataHoje+': '+acao+']'
+  p.observacoes=p.observacoes?nota+' | '+p.observacoes:nota
+  p.oQueFazer=''
+  p.updatedAt=new Date().toISOString()
+  upsert(p);renderLista();renderDash()
 }
 function cancelar(){tab('processos')}
 function confirmarDel(id){let p=get(id);if(!p)return;if(confirm('Excluir o processo '+p.numeroProcesso+'?\n\nEsta ação não pode ser desfeita.')){del(id);renderLista();renderDash()}}
