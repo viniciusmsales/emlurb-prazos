@@ -1,402 +1,676 @@
 <!DOCTYPE html>
-<!--
-  EMLURB – Gestão de Prazos Processuais
-  COMO HOSPEDAR NO GITHUB PAGES:
-  1. github.com → New repository → "emlurb-prazos" → Public
-  2. Upload este arquivo renomeado para index.html
-  3. Settings → Pages → Branch: main → Save
-  4. Link: https://SEU_USUARIO.github.io/emlurb-prazos/
--->
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EMLURB – Gestão de Prazos Processuais</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>EMLURB – Prazos Processuais</title>
 <style>
-:root{
-  --blue:#1e3a8a;--blue-l:#3b82f6;
-  --bg:#f1f5f9;--white:#fff;--border:#e2e8f0;
-  --text:#1e293b;--muted:#64748b;
-  --r:8px;--sh:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);
-  --sh2:0 4px 12px rgba(0,0,0,.1);
-}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.header{background:var(--blue);color:#fff;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:58px;box-shadow:var(--sh2);position:sticky;top:0;z-index:100}
-.header-brand{display:flex;align-items:center;gap:10px}
-.header-title{font-size:17px;font-weight:600;letter-spacing:-.3px}
-.header-sub{font-size:11px;opacity:.75;margin-top:1px}
-.header-actions{display:flex;gap:8px}
-.nav{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;display:flex;position:sticky;top:58px;z-index:99}
-.nav-btn{padding:13px 18px;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:var(--muted);transition:color .15s,border-color .15s;white-space:nowrap}
-.nav-btn:hover{color:var(--blue)}
-.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
-.main{padding:24px;max-width:1400px;margin:auto}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
-.kpi{background:#fff;border-radius:var(--r);padding:20px 24px;box-shadow:var(--sh);border-left:4px solid transparent}
-.kpi-total{border-color:var(--blue-l)}.kpi-vitoria{border-color:#16a34a}.kpi-derrota{border-color:#dc2626}.kpi-taxa{border-color:#7c3aed}
-.kpi label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
-.kpi .val{font-size:38px;font-weight:700;line-height:1;margin:4px 0}
-.kpi-total .val{color:var(--blue-l)}.kpi-vitoria .val{color:#16a34a}.kpi-derrota .val{color:#dc2626}.kpi-taxa .val{color:#7c3aed}
-.kpi small{font-size:12px;color:var(--muted)}
-.alert{border-radius:var(--r);padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px;border:1px solid}
-.alert-warn{background:#fffbeb;border-color:#fcd34d}.alert-danger{background:#fef2f2;border-color:#fca5a5}
-.alert-icon{font-size:22px;flex-shrink:0;line-height:1}
-.alert-title{font-weight:600;font-size:13px;margin-bottom:6px}
-.alert-list{list-style:none}
-.alert-list li{font-size:12px;padding:2px 0;cursor:pointer;color:var(--blue-l)}
-.alert-list li:hover{text-decoration:underline}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.sec-title{font-size:15px;font-weight:600}
-.card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:20px}
-.card-hdr{padding:13px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between}
-.btn{padding:8px 16px;border-radius:6px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
-.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:#1e3070}
-.btn-outline{background:#fff;color:var(--text);border:1px solid var(--border)}.btn-outline:hover{background:var(--bg)}
-.btn-ghost{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 8px;font-size:13px}.btn-ghost:hover{background:var(--bg)}
-.btn-sm{padding:5px 10px;font-size:12px}
-.toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.search{flex:1;min-width:200px;padding:8px 13px;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px}
-.search:focus{outline:none;border-color:var(--blue-l)}
-.sel{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;font-size:13px;background:#fff;cursor:pointer}
-.tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-thead th{background:#f8fafc;padding:10px 13px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
-tbody td{padding:11px 13px;font-size:12px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:#f8fafc}
-.pb{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
-.pb-azul{background:#dbeafe;color:#1d4ed8}.pb-verde{background:#dcfce7;color:#15803d}
-.pb-amarelo{background:#fef9c3;color:#854d0e}.pb-laranja{background:#ffedd5;color:#9a3412}
-.pb-vermelho{background:#fee2e2;color:#991b1b}.pb-vencido{background:#7f1d1d;color:#fff}
-.pb-encerrado{background:#f3f4f6;color:#6b7280}
-.sb{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.sb-andamento{background:#dbeafe;color:#1d4ed8}.sb-vitoria{background:#dcfce7;color:#15803d}
-.sb-derrota{background:#fee2e2;color:#991b1b}.sb-suspenso{background:#f3f4f6;color:#6b7280}
-.hdot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f59e0b;margin-left:4px;vertical-align:middle}
-.pnum{font-family:'Courier New',monospace;font-size:11px}
-.form-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--sh);max-width:620px;margin:auto}
-.form-hdr{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.form-hdr h2{font-size:17px;font-weight:600}
-.form-body{padding:24px}
-.fg{margin-bottom:15px}
-.fg label{display:block;font-size:12px;font-weight:600;margin-bottom:5px;color:var(--text);text-transform:uppercase;letter-spacing:.4px}
-.fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:6px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:#fff}
-.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--blue-l);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
-.fg textarea{min-height:68px;resize:vertical}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.fcheck{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;margin-top:8px}
-.fcheck input{width:auto}
-.required-note{font-size:11px;color:var(--muted);margin-bottom:16px}
-.empty{text-align:center;padding:50px 20px;color:var(--muted)}
-.empty .ei{font-size:44px;margin-bottom:10px}
-.empty p{font-size:15px;margin-bottom:6px}
-.empty small{font-size:12px}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:200;padding:16px}
-.modal{background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);font-weight:600;font-size:16px}
-.modal-body{padding:20px 22px}
-.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
-@media(max-width:768px){.header{padding:0 14px}.nav{padding:0 10px;overflow-x:auto}.main{padding:14px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.frow{grid-template-columns:1fr}}
-@media(max-width:480px){.header-title{font-size:14px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi .val{font-size:30px}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#333;font-size:14px}
+header{background:#1a3a6b;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+header h1{font-size:18px;font-weight:700;letter-spacing:.5px}
+.hbts{display:flex;gap:6px;flex-wrap:wrap}
+.hbt{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+.hbt:hover{background:rgba(255,255,255,.25)}
+.tabs{background:#fff;border-bottom:2px solid #e0e0e0;display:flex;padding:0 20px}
+.tab{padding:12px 20px;cursor:pointer;font-size:13px;font-weight:600;color:#666;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab.active{color:#1a3a6b;border-bottom-color:#1a3a6b}
+.tab:hover{color:#1a3a6b}
+main{padding:16px 20px;max-width:1200px;margin:0 auto}
+/* Dashboard */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border-radius:8px;padding:16px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.kpi .val{font-size:32px;font-weight:700;color:#1a3a6b}
+.kpi .lbl{font-size:12px;color:#888;margin-top:4px}
+.section-title{font-size:15px;font-weight:700;color:#1a3a6b;margin:16px 0 10px}
+.hon-card{background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.hon-card .proc{font-weight:600;font-size:13px}
+.hon-card .parte{font-size:12px;color:#555}
+.hon-card button{background:#ffc107;color:#333;border:none;padding:5px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:600}
+/* Lista */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.toolbar input{flex:1;min-width:160px;padding:7px 12px;border:1px solid #ccc;border-radius:6px;font-size:13px}
+.toolbar select{padding:7px 10px;border:1px solid #ccc;border-radius:6px;font-size:13px;background:#fff}
+.btn{padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600}
+.btn-primary{background:#1a3a6b;color:#fff}
+.btn-primary:hover{background:#15306a}
+.btn-success{background:#28a745;color:#fff}
+.btn-success:hover{background:#218838}
+.btn-danger{background:#dc3545;color:#fff}
+.btn-danger:hover{background:#c82333}
+.btn-warn{background:#fd7e14;color:#fff}
+.btn-warn:hover{background:#e96b00}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+thead{background:#1a3a6b;color:#fff}
+th{padding:10px 10px;text-align:left;font-size:12px;font-weight:600;white-space:nowrap}
+td{padding:9px 10px;font-size:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8f9fa}
+.badge{display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.pb-azul{background:#cfe2ff;color:#084298}
+.pb-verde{background:#d1e7dd;color:#0f5132}
+.pb-amarelo{background:#fff3cd;color:#664d03}
+.pb-laranja{background:#ffe5d0;color:#7d3a00}
+.pb-vermelho{background:#f8d7da;color:#842029}
+.pb-vencido{background:#e2e3e5;color:#41464b}
+.pb-suspenso{background:#d3d3f8;color:#2d2d8c}
+.acoes{display:flex;gap:4px;flex-wrap:nowrap}
+.acoes button{padding:4px 8px;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600}
+.bt-ed{background:#e9ecef;color:#495057}
+.bt-ed:hover{background:#dee2e6}
+.bt-ok{background:#d1e7dd;color:#0f5132}
+.bt-ok:hover{background:#badbcc}
+.bt-del{background:#f8d7da;color:#842029}
+.bt-del:hover{background:#f5c2c7}
+/* Modal */
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:10px;padding:24px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;position:relative}
+.modal h2{font-size:16px;font-weight:700;color:#1a3a6b;margin-bottom:16px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:3px}
+input,select,textarea{width:100%;padding:7px 10px;border:1px solid #ccc;border-radius:5px;font-size:13px;font-family:inherit}
+textarea{resize:vertical;min-height:60px}
+.form-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.close-btn{position:absolute;top:12px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#888;line-height:1}
+.empty{text-align:center;padding:40px;color:#999;font-size:13px}
+.tag-suspenso{text-decoration:line-through;opacity:.7}
+/* Filtro urgência */
+.filt-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;cursor:pointer;border:2px solid transparent;font-size:12px;font-weight:600}
+.filt-badge.sel{border-color:#1a3a6b}
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="header-brand">
-    <span style="font-size:22px">&#9878;&#65039;</span>
-    <div>
-      <div class="header-title">EMLURB &mdash; Gestão de Prazos</div>
-      <div class="header-sub">Feriados TJPE 2025&ndash;2026 &middot; Art. 219 CPC</div>
-    </div>
-  </div>
-  <div class="header-actions">
-    <button class="btn btn-outline btn-sm" onclick="exportar()">&#8595; Exportar</button>
-    <button class="btn btn-outline btn-sm" onclick="document.getElementById('impFile').click()">&#8593; Importar</button>
-    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importar(event)">
-    <button class="btn btn-outline btn-sm" onclick="recarregarDados()" title="Recarregar dados da planilha">&#8635; Recarregar</button>
+<header>
+  <h1>⚖ EMLURB – Prazos Processuais</h1>
+  <div class="hbts">
+    <button class="hbt" onclick="abrirModal(null)">+ Novo Processo</button>
+    <button class="hbt" onclick="exportar()">↓ Exportar</button>
+    <label class="hbt" style="cursor:pointer">↑ Importar<input type="file" accept=".json" style="display:none" onchange="importar(event)"></label>
   </div>
 </header>
 
-<nav class="nav">
-  <button class="nav-btn active" onclick="tab('dashboard')" id="nt-dashboard">&#128202; Dashboard</button>
-  <button class="nav-btn" onclick="tab('processos')" id="nt-processos">&#128193; Processos</button>
-  <button class="nav-btn" onclick="tab('novo')" id="nt-novo">&#xFF0B; Novo Processo</button>
-</nav>
-
-<main class="main">
-
-<div id="tab-dashboard" class="tab-content active">
-  <div class="kpi-grid" id="kpiGrid"></div>
-  <div id="alertHonorarios"></div>
-  <div id="alertCriticos"></div>
-  <div class="card">
-    <div class="card-hdr">&#128197; Próximos vencimentos<span id="dashCount" style="font-size:11px;color:var(--muted);font-weight:400"></span></div>
-    <div id="dashTabela"></div>
-  </div>
+<div class="tabs">
+  <div class="tab active" id="tab-dash" onclick="tab('dash')">Dashboard</div>
+  <div class="tab" id="tab-lista" onclick="tab('lista')">Processos</div>
 </div>
 
-<div id="tab-processos" class="tab-content">
-  <div class="sec-hdr">
-    <span class="sec-title" id="listTitle">Processos</span>
-    <button class="btn btn-primary" onclick="tab('novo')">&#xFF0B; Novo Processo</button>
+<main>
+  <!-- DASHBOARD -->
+  <div id="view-dash">
+    <div class="kpis" id="kpis"></div>
+    <div id="hon-section"></div>
   </div>
-  <div class="toolbar">
-    <input type="text" class="search" id="srch" placeholder="Buscar processo, SEI, parte contrária..." oninput="renderLista()">
-    <select class="sel" id="fStatus" onchange="renderLista()">
-      <option value="">Todos os status</option>
-      <option value="andamento">Em andamento</option>
-      <option value="vitoria">Vitórias</option>
-      <option value="derrota">Derrotas</option>
-      <option value="suspenso">Suspenso</option>
-    </select>
-    <select class="sel" id="fUrg" onchange="renderLista()">
-      <option value="">Qualquer prazo</option>
-      <option value="hoje">Vence hoje</option>
-      <option value="critico">Crítico (&le;2 dias)</option>
-      <option value="urgente">Urgente (&le;5 dias)</option>
-      <option value="atencao">Atenção (&le;10 dias)</option>
-      <option value="vencido">Vencidos</option>
-    </select>
-  </div>
-  <div class="card">
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr>
-          <th>N&ordm; Processo</th><th>SEI</th><th>Parte Contrária</th>
-          <th>Disponibilização</th><th>Data Final</th><th>Prazo Restante</th>
-          <th>O que fazer</th><th>Status</th><th style="width:80px">Ações</th>
-        </tr></thead>
-        <tbody id="listaBody"></tbody>
-      </table>
+
+  <!-- LISTA -->
+  <div id="view-lista" style="display:none">
+    <div class="toolbar">
+      <input type="text" id="busca" placeholder="Buscar processo, SEI, parte…" oninput="renderLista()">
+      <select id="filtStatus" onchange="renderLista()">
+        <option value="">Todos os status</option>
+        <option value="ativo">Ativo</option>
+        <option value="suspenso">Suspenso/Cumprido</option>
+        <option value="encerrado">Encerrado</option>
+      </select>
+      <select id="filtUrgencia" onchange="renderLista()">
+        <option value="">Todas urgências</option>
+        <option value="pb-vencido">Vencido</option>
+        <option value="pb-vermelho">0–2 dias</option>
+        <option value="pb-laranja">3–5 dias</option>
+        <option value="pb-amarelo">6–8 dias</option>
+        <option value="pb-verde">9–12 dias</option>
+        <option value="pb-azul">&gt;12 dias</option>
+        <option value="pb-suspenso">Suspenso</option>
+      </select>
     </div>
+    <div id="lista-container"></div>
   </div>
-</div>
-
-<div id="tab-novo" class="tab-content">
-  <div class="form-wrap">
-    <div class="form-hdr"><h2 id="formTitulo">Novo Processo</h2></div>
-    <div class="form-body">
-      <p class="required-note">Campos com * são obrigatórios</p>
-      <form id="fForm" onsubmit="salvar(event)">
-        <input type="hidden" id="fId">
-        <div class="frow">
-          <div class="fg"><label>N&ordm; do Processo *</label><input type="text" id="fProc" placeholder="0000000-00.0000.0.00.0000" required></div>
-          <div class="fg"><label>N&ordm; SEI</label><input type="text" id="fSEI" placeholder="15.000000/0000-00"></div>
-        </div>
-        <div class="fg"><label>Parte Contrária *</label><input type="text" id="fParte" placeholder="Nome da parte ou representante legal"></div>
-        <div class="frow">
-          <div class="fg"><label>Data de Disponibilização *</label><input type="date" id="fDisp"></div>
-          <div class="fg"><label>Prazo (dias) *</label><input type="number" id="fPrazo" min="1" max="365" placeholder="Ex: 15"></div>
-        </div>
-        <div class="fg"><label>Tipo de contagem</label>
-          <select id="fTipo">
-            <option value="uteis">Dias úteis (Art. 219 CPC)</option>
-            <option value="corridos">Dias corridos</option>
-          </select>
-        </div>
-        <div class="fg"><label>O que fazer no prazo *</label><textarea id="fAcao" placeholder="Ex: Apresentar contestação / Recurso de Apelação..."></textarea></div>
-        <div class="frow">
-          <div class="fg"><label>Status do processo</label>
-            <select id="fStatusForm" onchange="toggleHon()">
-              <option value="andamento">Em andamento</option>
-              <option value="vitoria">Vitória</option>
-              <option value="derrota">Derrota</option>
-              <option value="suspenso">Suspenso / aguardando</option>
-            </select>
-          </div>
-          <div class="fg" id="honGroup" style="display:none">
-            <label>Honorários de êxito</label>
-            <label class="fcheck"><input type="checkbox" id="fHon"> Pendente de execução</label>
-          </div>
-        </div>
-        <div class="fg"><label>Observações</label><textarea id="fObs" placeholder="Notas, histórico, comarca, juiz..."></textarea></div>
-        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
-          <button type="button" class="btn btn-outline" onclick="cancelar()">Cancelar</button>
-          <button type="submit" class="btn btn-primary">&#128190; Salvar Processo</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
 </main>
 
-<div id="modalObs" class="modal-overlay" style="display:none" onclick="if(event.target===this)fecharModal()">
+<!-- MODAL -->
+<div class="overlay" id="overlay">
   <div class="modal">
-    <div class="modal-hdr" id="modalTitulo"></div>
-    <div class="modal-body" id="modalConteudo"></div>
-    <div class="modal-foot">
-      <button class="btn btn-outline" onclick="fecharModal()">Fechar</button>
-      <button class="btn btn-primary" id="modalEditBtn">&#9999;&#65039; Editar</button>
-    </div>
+    <button class="close-btn" onclick="fecharModal()">×</button>
+    <h2 id="modal-titulo">Processo</h2>
+    <form onsubmit="salvar(event)">
+      <div class="form-grid">
+        <div class="form-full">
+          <label>Nº Processo *</label>
+          <input type="text" id="fProc" required placeholder="0000000-00.0000.0.00.0000">
+        </div>
+        <div>
+          <label>Nº SEI</label>
+          <input type="text" id="fSEI" placeholder="SEI-040...">
+        </div>
+        <div>
+          <label>Parte Contrária</label>
+          <input type="text" id="fParte" placeholder="Nome da parte">
+        </div>
+        <div>
+          <label>Data da Intimação/Citação</label>
+          <input type="date" id="fDisp">
+        </div>
+        <div>
+          <label>Prazo (dias úteis)</label>
+          <input type="number" id="fPrazo" min="1" max="365" placeholder="15">
+        </div>
+        <div>
+          <label>Tipo de prazo</label>
+          <select id="fTipo">
+            <option value="uteis">Dias Úteis (Art.219 CPC)</option>
+            <option value="corridos">Dias Corridos</option>
+          </select>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="fStatus">
+            <option value="ativo">Ativo</option>
+            <option value="suspenso">Suspenso/Cumprido</option>
+            <option value="encerrado">Encerrado</option>
+          </select>
+        </div>
+        <div class="form-full">
+          <label>O que fazer / Ação</label>
+          <input type="text" id="fAcao" placeholder="Ex: Protocolar contestação">
+        </div>
+        <div class="form-full">
+          <label>Resultado (êxito / derrota)</label>
+          <select id="fResultado">
+            <option value="">Em andamento</option>
+            <option value="exito">Êxito</option>
+            <option value="derrota">Derrota</option>
+            <option value="acordo">Acordo</option>
+            <option value="extinto">Extinto</option>
+          </select>
+        </div>
+        <div class="form-full">
+          <label><input type="checkbox" id="fHon" style="width:auto;margin-right:6px">Honorários de êxito pendentes</label>
+        </div>
+        <div class="form-full">
+          <label>Observações</label>
+          <textarea id="fObs" rows="3" placeholder="Notas adicionais…"></textarea>
+        </div>
+      </div>
+      <div class="form-btns">
+        <button type="button" class="btn" onclick="fecharModal()" style="background:#e9ecef;color:#333">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <script>
-const FER=new Set(["2025-01-01","2025-03-03","2025-03-04","2025-03-05","2025-04-18","2025-04-21","2025-05-01","2025-06-19","2025-09-07","2025-10-12","2025-11-02","2025-11-15","2025-11-20","2025-12-25","2026-01-01","2026-01-02","2026-01-03","2026-01-04","2026-01-05","2026-01-06","2026-02-16","2026-02-17","2026-02-18","2026-03-06","2026-04-02","2026-04-03","2026-04-21","2026-05-01","2026-06-23","2026-06-25","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30","2026-07-16","2026-09-07","2026-10-12","2026-10-30","2026-11-02","2026-11-15","2026-11-20","2026-12-08","2026-12-20","2026-12-21","2026-12-22","2026-12-23","2026-12-24","2026-12-26","2026-12-27","2026-12-28","2026-12-29","2026-12-30","2026-12-31"])
-function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
-function pad(n){return String(n).padStart(2,'0')}
-function parse(s){return new Date(s+'T12:00:00')}
-function feriado(d){return FER.has(iso(d))}
-function fimSem(d){let w=d.getDay();return w===0||w===6}
-function util(d){return !fimSem(d)&&!feriado(d)}
-function proxUtil(d){let r=new Date(d);do{r.setDate(r.getDate()+1)}while(!util(r));return r}
-function calcFinal(dispStr,prazo,tipo){
-  let disp=parse(dispStr),pub=proxUtil(disp),ini=proxUtil(pub),cnt=0,cur=new Date(ini)
-  for(let i=0;i<600;i++){if(tipo==='corridos'||util(cur)){cnt++;if(cnt===prazo)return iso(cur)}cur.setDate(cur.getDate()+1)}
-  return null
-}
-function diasRestantes(finalStr,tipo){
-  let hoje=new Date();hoje.setHours(12,0,0,0)
-  let fim=parse(finalStr),hISO=iso(hoje),fISO=finalStr
-  if(hISO===fISO)return 0
-  if(tipo==='corridos')return Math.round((fim-hoje)/86400000)
-  if(fISO>hISO){let c=0,d=new Date(hoje);d.setDate(d.getDate()+1);while(iso(d)<=fISO){if(util(d))c++;d.setDate(d.getDate()+1)}return c}
-  let c=0,d=new Date(fim);d.setDate(d.getDate()+1);while(iso(d)<=hISO){if(util(d))c++;d.setDate(d.getDate()+1)}return-(c||1)
-}
-function badge(p){
-  if(p.status!=='andamento'||!p.dataFinal)return null
-  let hISO=iso(new Date())
-  if(p.dataFinal<hISO)return{label:'VENCIDO',cls:'pb-vencido',dias:-999}
-  let dias=diasRestantes(p.dataFinal,p.tipoPrazo)
-  let suf=p.tipoPrazo==='uteis'?(dias===1?'dia útil':'dias úteis'):(dias===1?'dia':'dias')
-  if(dias===0)return{label:'Vence HOJE',cls:'pb-vermelho',dias:0}
-  let cls=dias<=2?'pb-vermelho':dias<=5?'pb-laranja':dias<=8?'pb-amarelo':dias<=12?'pb-verde':'pb-azul'
-  return{label:dias+' '+suf,cls,dias}
-}
-const KEY='emlurb_v2'
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}}
-function save(ps){localStorage.setItem(KEY,JSON.stringify(ps))}
-function all(){return load()}
-function get(id){return all().find(p=>p.id===id)}
-function upsert(p){let ps=all(),i=ps.findIndex(x=>x.id===p.id);i>=0?ps[i]=p:ps.push(p);save(ps)}
-function del(id){save(all().filter(p=>p.id!==id))}
-function tab(name){
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'))
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'))
-  document.getElementById('tab-'+name).classList.add('active')
-  document.getElementById('nt-'+name).classList.add('active')
-  if(name==='dashboard')renderDash()
-  if(name==='processos')renderLista()
-  if(name==='novo'){document.getElementById('formTitulo').textContent='Novo Processo';document.getElementById('fForm').reset();document.getElementById('fId').value='';toggleHon();window.scrollTo(0,0)}
-}
-function renderDash(){
-  let ps=all(),total=ps.length,vit=ps.filter(p=>p.status==='vitoria').length
-  let der=ps.filter(p=>p.status==='derrota').length,and=ps.filter(p=>p.status==='andamento').length
-  let taxa=vit+der>0?Math.round(vit/(vit+der)*100):0
-  document.getElementById('kpiGrid').innerHTML='<div class="kpi kpi-total"><label>Total de Processos</label><div class="val">'+total+'</div><small>'+and+' em andamento</small></div><div class="kpi kpi-vitoria"><label>Vitórias</label><div class="val">'+vit+'</div><small>processos encerrados</small></div><div class="kpi kpi-derrota"><label>Derrotas</label><div class="val">'+der+'</div><small>processos encerrados</small></div><div class="kpi kpi-taxa"><label>Taxa de Êxito</label><div class="val">'+taxa+'%</div><small>'+(vit+der)+' encerrados no total</small></div>'
-  let hon=ps.filter(p=>p.status==='vitoria'&&p.honorariosPendentes)
-  document.getElementById('alertHonorarios').innerHTML=hon.length?'<div class="alert alert-warn"><div class="alert-icon">&#128176;</div><div><div class="alert-title">Honorários de êxito pendentes — '+hon.length+' processo(s)</div><ul class="alert-list">'+hon.map(p=>'<li onclick="abrirModal(\''+p.id+'\')">&#128204; '+p.numeroProcesso+' — '+p.parteContraria+'</li>').join('')+'</ul></div></div>':''
-  let crit=ps.filter(p=>p.status==='andamento'&&p.dataFinal).map(p=>({...p,b:badge(p)})).filter(p=>p.b&&p.b.dias<=2).sort((a,b)=>a.b.dias-b.b.dias)
-  document.getElementById('alertCriticos').innerHTML=crit.length?'<div class="alert alert-danger"><div class="alert-icon">&#128680;</div><div><div class="alert-title">Prazos críticos — vencem em até 2 dias úteis ('+crit.length+')</div><ul class="alert-list">'+crit.map(p=>'<li onclick="abrirModal(\''+p.id+'\')"><span class="pb '+p.b.cls+'">'+p.b.label+'</span> '+p.numeroProcesso+' — '+p.parteContraria+'</li>').join('')+'</ul></div></div>':''
-  let prox=ps.filter(p=>p.status==='andamento'&&p.dataFinal).map(p=>({...p,b:badge(p)})).filter(p=>p.b).sort((a,b)=>a.b.dias-b.b.dias)
-  document.getElementById('dashCount').textContent=prox.length+' processo(s)'
-  if(!prox.length){document.getElementById('dashTabela').innerHTML='<div class="empty"><div class="ei">&#9989;</div><p>Nenhum processo em andamento com data final</p><small>Preencha a data de disponibilização e o prazo em cada processo</small></div>';return}
-  document.getElementById('dashTabela').innerHTML='<div class="tbl-wrap"><table><thead><tr><th>Prazo Restante</th><th>N&ordm; Processo</th><th>Parte Contrária</th><th>Data Final</th><th>O que fazer</th></tr></thead><tbody>'+prox.map(p=>'<tr style="cursor:pointer" onclick="abrirModal(\''+p.id+'\')"><td><span class="pb '+p.b.cls+'">'+p.b.label+'</span></td><td><span class="pnum">'+p.numeroProcesso+'</span></td><td>'+p.parteContraria+'</td><td>'+fmt(p.dataFinal)+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.oQueFazer+'</td></tr>').join('')+'</tbody></table></div>'
-}
-function renderLista(){
-  let ps=all(),q=(document.getElementById('srch').value||'').toLowerCase()
-  let fs=document.getElementById('fStatus').value,fu=document.getElementById('fUrg').value
-  if(q)ps=ps.filter(p=>(p.numeroProcesso||'').toLowerCase().includes(q)||(p.numeroSEI||'').toLowerCase().includes(q)||(p.parteContraria||'').toLowerCase().includes(q)||(p.oQueFazer||'').toLowerCase().includes(q))
-  if(fs)ps=ps.filter(p=>p.status===fs)
-  if(fu)ps=ps.filter(p=>{if(p.status!=='andamento'||!p.dataFinal)return false;let b=badge(p);if(!b)return false;if(fu==='hoje')return b.dias===0;if(fu==='critico')return b.dias<=2;if(fu==='urgente')return b.dias<=5;if(fu==='atencao')return b.dias<=10;if(fu==='vencido')return b.dias<0;return true})
-  ps.sort((a,b)=>{let ba=badge(a),bb=badge(b);if(!ba&&!bb)return 0;if(!ba)return 1;if(!bb)return -1;return ba.dias-bb.dias})
-  document.getElementById('listTitle').textContent=ps.length+' processo(s)'
-  let tbody=document.getElementById('listaBody')
-  if(!ps.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty"><div class="ei">&#128194;</div><p>Nenhum resultado</p><small>Tente ajustar os filtros</small></div></td></tr>';return}
-  tbody.innerHTML=ps.map(p=>{
-    let b=badge(p),prazoCell=b?'<span class="pb '+b.cls+'">'+b.label+'</span>':'<span class="pb pb-encerrado">—</span>'
-    let hdot=p.status==='vitoria'&&p.honorariosPendentes?'<span class="hdot" title="Honorários pendentes"></span>':''
-    return '<tr><td><span class="pnum">'+p.numeroProcesso+'</span></td><td><span class="pnum">'+(p.numeroSEI||'—')+'</span></td><td>'+(p.parteContraria||'—')+'</td><td>'+fmt(p.dataDisponibilizacao)+'</td><td>'+fmt(p.dataFinal)+'</td><td>'+prazoCell+'</td><td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+p.oQueFazer+'">'+p.oQueFazer+'</td><td><span class="sb sb-'+p.status+'">'+slabel(p.status)+'</span>'+hdot+'</td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm" onclick="editar(\''+p.id+'\')" title="Editar">&#9999;&#65039;</button><button class="btn btn-ghost btn-sm" onclick="confirmarDel(\''+p.id+'\')" title="Excluir">&#128465;&#65039;</button></div></td></tr>'
-  }).join('')
-}
-function toggleHon(){document.getElementById('honGroup').style.display=document.getElementById('fStatusForm').value==='vitoria'?'block':'none'}
-function salvar(e){
-  e.preventDefault()
-  let id=document.getElementById('fId').value||crypto.randomUUID()
-  let dispStr=document.getElementById('fDisp').value,prazo=parseInt(document.getElementById('fPrazo').value),tipo=document.getElementById('fTipo').value
-  let dataFinal=dispStr&&prazo?calcFinal(dispStr,prazo,tipo):null
-  let p={id,numeroProcesso:document.getElementById('fProc').value.trim(),numeroSEI:document.getElementById('fSEI').value.trim(),parteContraria:document.getElementById('fParte').value.trim(),dataDisponibilizacao:dispStr,prazo,tipoPrazo:tipo,oQueFazer:document.getElementById('fAcao').value.trim(),status:document.getElementById('fStatusForm').value,honorariosPendentes:document.getElementById('fHon').checked,observacoes:document.getElementById('fObs').value.trim(),dataFinal,updatedAt:new Date().toISOString()}
-  let ex=get(id);p.createdAt=ex?ex.createdAt:new Date().toISOString()
-  upsert(p);tab('processos')
-}
-function editar(id){
-  let p=get(id);if(!p)return
-  document.getElementById('formTitulo').textContent='Editar Processo'
-  document.getElementById('fId').value=p.id
-  document.getElementById('fProc').value=p.numeroProcesso||''
-  document.getElementById('fSEI').value=p.numeroSEI||''
-  document.getElementById('fParte').value=p.parteContraria||''
-  document.getElementById('fDisp').value=p.dataDisponibilizacao||''
-  document.getElementById('fPrazo').value=p.prazo||''
-  document.getElementById('fTipo').value=p.tipoPrazo||'uteis'
-  document.getElementById('fAcao').value=p.oQueFazer||''
-  document.getElementById('fStatusForm').value=p.status||'andamento'
-  document.getElementById('fHon').checked=p.honorariosPendentes||false
-  document.getElementById('fObs').value=p.observacoes||''
-  toggleHon();tab('novo');window.scrollTo(0,0)
-}
-function cumprir(id){
-  var p=get(id);if(!p)return
-  var hoje=new Date();var dd=String(hoje.getDate()).padStart(2,'0');var mm=String(hoje.getMonth()+1).padStart(2,'0');var aaaa=hoje.getFullYear()
-  var dataHoje=dd+'/'+mm+'/'+aaaa
-  var acao=p.oQueFazer?p.oQueFazer:'prazo'
-  if(!confirm('Marcar como CUMPRIDO em '+dataHoje+'?
+// ============================================================
+// FERIADOS TJPE 2025 + 2026 (Art.219 CPC)
+// ============================================================
+var FER = {
+  "2025-01-01":1,"2025-03-03":1,"2025-03-04":1,"2025-03-05":1,
+  "2025-04-18":1,"2025-04-19":1,"2025-04-21":1,"2025-05-01":1,
+  "2025-06-19":1,"2025-07-16":1,"2025-08-15":1,"2025-09-07":1,
+  "2025-10-12":1,"2025-11-02":1,"2025-11-15":1,"2025-11-20":1,
+  "2025-12-08":1,"2025-12-24":1,"2025-12-25":1,"2025-12-31":1,
+  "2026-01-01":1,"2026-02-16":1,"2026-02-17":1,"2026-02-18":1,
+  "2026-04-03":1,"2026-04-04":1,"2026-04-21":1,"2026-05-01":1,
+  "2026-06-04":1,"2026-07-16":1,"2026-08-15":1,"2026-09-07":1,
+  "2026-10-12":1,"2026-11-02":1,"2026-11-15":1,"2026-11-20":1,
+  "2026-12-08":1,"2026-12-24":1,"2026-12-25":1,"2026-12-31":1
+};
 
-"'+acao+'"'))return
-  p.dataDisponibilizacao=''
-  p.prazo=null
-  p.dataFinal=null
-  p.status='suspenso'
-  var nota='[Cumprido em '+dataHoje+': '+acao+']'
-  p.observacoes=p.observacoes?nota+' | '+p.observacoes:nota
-  p.oQueFazer=''
-  p.updatedAt=new Date().toISOString()
-  upsert(p);renderLista();renderDash()
+// ============================================================
+// UTILITÁRIOS DE DATA
+// ============================================================
+function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+function dISO(d){
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
 }
-function cancelar(){tab('processos')}
-function confirmarDel(id){let p=get(id);if(!p)return;if(confirm('Excluir o processo '+p.numeroProcesso+'?\n\nEsta ação não pode ser desfeita.')){del(id);renderLista();renderDash()}}
-function abrirModal(id){
-  let p=get(id);if(!p)return
-  let b=badge(p)
-  document.getElementById('modalTitulo').textContent=p.numeroProcesso
-  document.getElementById('modalConteudo').innerHTML='<table style="width:100%;border-collapse:collapse;font-size:13px">'+tr('N&ordm; Processo','<span class="pnum">'+p.numeroProcesso+'</span>')+tr('SEI',p.numeroSEI||'—')+tr('Parte Contrária',p.parteContraria||'—')+tr('Disponibilização',fmt(p.dataDisponibilizacao))+tr('Prazo',p.prazo?p.prazo+' '+(p.tipoPrazo==='uteis'?'dias úteis':'dias corridos'):'—')+tr('Data Final','<strong>'+fmt(p.dataFinal)+'</strong>')+tr('Prazo Restante',b?'<span class="pb '+b.cls+'">'+b.label+'</span>':'—')+tr('O que fazer',p.oQueFazer||'—')+tr('Status','<span class="sb sb-'+p.status+'">'+slabel(p.status)+'</span>'+(p.status==='vitoria'&&p.honorariosPendentes?' <em style="font-size:11px;color:#f59e0b">&#128176; Honorários pendentes</em>':''))+(p.observacoes?tr('Observações',p.observacoes):'')+tr('Últ. atualização',p.updatedAt?p.updatedAt.slice(0,10):'—')+'</table>'
-  document.getElementById('modalEditBtn').onclick=()=>{fecharModal();editar(id)}
-  document.getElementById('modalObs').style.display='flex'
+
+function parseISO(s){
+  if(!s) return null;
+  var p = s.split('-');
+  return new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
 }
-function tr(k,v){return '<tr><td style="padding:8px 0;font-weight:600;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;width:140px;vertical-align:top">'+k+'</td><td style="padding:8px 0">'+v+'</td></tr>'}
-function fecharModal(){document.getElementById('modalObs').style.display='none'}
-function fmt(s){if(!s)return '—';let[y,m,d]=s.split('-');return d+'/'+m+'/'+y}
-function slabel(s){return{andamento:'Em andamento',vitoria:'Vitória',derrota:'Derrota',suspenso:'Suspenso'}[s]||s}
+
+function isUtil(d){
+  var w = d.getDay();
+  return w !== 0 && w !== 6 && !FER[dISO(d)];
+}
+
+function proxUtil(d){
+  var r = new Date(d.getTime());
+  while(!isUtil(r)) r.setDate(r.getDate()+1);
+  return r;
+}
+
+function calcFinal(dispISO, prazo, tipo){
+  if(!dispISO || !prazo) return '';
+  var d = parseISO(dispISO);
+  if(!d) return '';
+  var n = parseInt(prazo);
+  if(isNaN(n) || n < 1) return '';
+  if(tipo === 'corridos'){
+    d.setDate(d.getDate() + n);
+    return dISO(proxUtil(d));
+  }
+  // dias úteis Art.219
+  var count = 0;
+  d.setDate(d.getDate()+1); // começa no dia seguinte
+  while(count < n){
+    if(isUtil(d)) count++;
+    if(count < n) d.setDate(d.getDate()+1);
+  }
+  return dISO(proxUtil(d));
+}
+
+function diasRestantes(finalISO){
+  if(!finalISO) return null;
+  var hoje = new Date();
+  var hojeISO = dISO(hoje);
+  var f = parseISO(finalISO);
+  if(!f) return null;
+  // conta dias úteis entre hoje e prazo final
+  var sign = 1;
+  var a, b;
+  if(hojeISO <= finalISO){ a = hoje; b = f; }
+  else { a = f; b = hoje; sign = -1; }
+  var cnt = 0;
+  var cur = new Date(a.getTime());
+  cur.setDate(cur.getDate()+1);
+  while(dISO(cur) <= dISO(b)){
+    if(isUtil(cur)) cnt++;
+    cur.setDate(cur.getDate()+1);
+  }
+  return sign * cnt;
+}
+
+function getBadge(p){
+  if(p.status === 'suspenso' || p.status === 'encerrado'){
+    return {l: p.status === 'suspenso' ? 'Suspenso' : 'Encerrado', c:'pb-suspenso', d:null};
+  }
+  if(!p.prazoFinal){
+    return {l:'Sem prazo', c:'pb-azul', d:null};
+  }
+  var d = diasRestantes(p.prazoFinal);
+  if(d === null) return {l:'Sem prazo', c:'pb-azul', d:null};
+  if(d < 0)  return {l:'Vencido', c:'pb-vencido', d:d};
+  if(d <= 2)  return {l: d + ' dia(s)', c:'pb-vermelho', d:d};
+  if(d <= 5)  return {l: d + ' dias', c:'pb-laranja', d:d};
+  if(d <= 8)  return {l: d + ' dias', c:'pb-amarelo', d:d};
+  if(d <= 12) return {l: d + ' dias', c:'pb-verde', d:d};
+  return {l: d + ' dias', c:'pb-azul', d:d};
+}
+
+function fmt(s){
+  if(!s) return '–';
+  var p = s.split('-');
+  return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+// ============================================================
+// STORAGE
+// ============================================================
+var STORE_KEY = 'emlurb_v2';
+
+function loadAll(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return [];
+    return JSON.parse(raw);
+  } catch(e){ return []; }
+}
+
+function saveAll(arr){
+  localStorage.setItem(STORE_KEY, JSON.stringify(arr));
+}
+
+function getOne(id){
+  var arr = loadAll();
+  for(var i=0;i<arr.length;i++){ if(arr[i].id===id) return arr[i]; }
+  return null;
+}
+
+function upsert(p){
+  var arr = loadAll();
+  var found = false;
+  for(var i=0;i<arr.length;i++){
+    if(arr[i].id===p.id){ arr[i]=p; found=true; break; }
+  }
+  if(!found) arr.push(p);
+  saveAll(arr);
+}
+
+function remove(id){
+  var arr = loadAll();
+  var novo = [];
+  for(var i=0;i<arr.length;i++){ if(arr[i].id!==id) novo.push(arr[i]); }
+  saveAll(novo);
+}
+
+function gerarId(){
+  var s='';
+  var chars='0123456789abcdef';
+  for(var i=0;i<32;i++) s+=chars[Math.floor(Math.random()*16)];
+  return s.substr(0,8)+'-'+s.substr(8,4)+'-4'+s.substr(13,3)+'-'+s.substr(16,4)+'-'+s.substr(20);
+}
+
+// ============================================================
+// NAVEGAÇÃO DE TABS
+// ============================================================
+function tab(name){
+  document.getElementById('view-dash').style.display  = name==='dash'  ? '' : 'none';
+  document.getElementById('view-lista').style.display = name==='lista' ? '' : 'none';
+  document.getElementById('tab-dash').className  = 'tab' + (name==='dash'  ? ' active' : '');
+  document.getElementById('tab-lista').className = 'tab' + (name==='lista' ? ' active' : '');
+  if(name==='dash')  renderDash();
+  if(name==='lista') renderLista();
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDash(){
+  var arr = loadAll();
+  var total=0, ativos=0, exito=0, derrota=0, acordo=0, hon=0;
+  var urgentes=[];
+
+  for(var i=0;i<arr.length;i++){
+    var p=arr[i];
+    total++;
+    if(p.status==='ativo') ativos++;
+    if(p.resultado==='exito') exito++;
+    if(p.resultado==='derrota') derrota++;
+    if(p.resultado==='acordo') acordo++;
+    if(p.honorarios) hon++;
+    if(p.status==='ativo' && p.prazoFinal){
+      var d=diasRestantes(p.prazoFinal);
+      if(d!==null && d<=5) urgentes.push(p);
+    }
+  }
+
+  var kpis = document.getElementById('kpis');
+  kpis.innerHTML =
+    kpiBox(total,'Total de Processos') +
+    kpiBox(ativos,'Processos Ativos') +
+    kpiBox(exito,'Êxitos','#0f5132','#d1e7dd') +
+    kpiBox(derrota,'Derrotas','#842029','#f8d7da') +
+    kpiBox(acordo,'Acordos','#664d03','#fff3cd') +
+    kpiBox(hon,'Hon. Êxito Pendentes','#7d3a00','#ffe5d0');
+
+  var hs = document.getElementById('hon-section');
+  var html = '';
+
+  if(urgentes.length > 0){
+    html += '<div class="section-title">⚠ Prazos Urgentes (≤5 dias úteis)</div>';
+    for(var j=0;j<urgentes.length;j++){
+      var u=urgentes[j];
+      var b=getBadge(u);
+      html += '<div class="hon-card" style="border-color:#dc3545;background:#fff5f5">'+
+        '<div><div class="proc">'+esc(u.numeroProcesso)+'</div>'+
+        '<div class="parte">'+(u.parteContraria||'')+(u.acao?' – '+esc(u.acao):'')+'</div></div>'+
+        '<span class="badge '+b.c+'">'+b.l+'</span>'+
+        '</div>';
+    }
+  }
+
+  var honArr = [];
+  for(var k=0;k<arr.length;k++){ if(arr[k].honorarios) honArr.push(arr[k]); }
+  if(honArr.length > 0){
+    html += '<div class="section-title">💰 Honorários de Êxito Pendentes</div>';
+    for(var m=0;m<honArr.length;m++){
+      var h=honArr[m];
+      html += '<div class="hon-card">'+
+        '<div>'+
+          '<div class="proc">'+esc(h.numeroProcesso)+'</div>'+
+          '<div class="parte">'+(h.parteContraria||'')+'</div>'+
+        '</div>'+
+        '<button onclick="toggleHon(\''+h.id+'\')">Marcar como executado</button>'+
+        '</div>';
+    }
+  }
+
+  if(html==='') html='<p style="color:#888;margin-top:20px;text-align:center">Nenhum alerta no momento.</p>';
+  hs.innerHTML = html;
+}
+
+function kpiBox(val,lbl,color,bg){
+  var c = color||'#1a3a6b';
+  var b = bg||'#fff';
+  return '<div class="kpi" style="background:'+b+'">'+
+    '<div class="val" style="color:'+c+'">'+val+'</div>'+
+    '<div class="lbl">'+lbl+'</div>'+
+    '</div>';
+}
+
+function toggleHon(id){
+  var p=getOne(id);
+  if(!p) return;
+  p.honorarios=false;
+  upsert(p);
+  renderDash();
+}
+
+// ============================================================
+// LISTA
+// ============================================================
+function renderLista(){
+  var arr = loadAll();
+  var busca = (document.getElementById('busca').value||'').toLowerCase();
+  var fStatus = document.getElementById('filtStatus').value;
+  var fUrg = document.getElementById('filtUrgencia').value;
+
+  var filtered = [];
+  for(var i=0;i<arr.length;i++){
+    var p=arr[i];
+    if(busca){
+      var hay = (p.numeroProcesso||'') + (p.numeroSEI||'') + (p.parteContraria||'') + (p.acao||'');
+      if(hay.toLowerCase().indexOf(busca)<0) continue;
+    }
+    if(fStatus && p.status !== fStatus) continue;
+    var b=getBadge(p);
+    if(fUrg && b.c !== fUrg) continue;
+    filtered.push(p);
+  }
+
+  // ordenar por urgência
+  filtered.sort(function(a,b2){
+    var ba=getBadge(a), bb=getBadge(b2);
+    var order={'pb-vencido':0,'pb-vermelho':1,'pb-laranja':2,'pb-amarelo':3,'pb-verde':4,'pb-azul':5,'pb-suspenso':6};
+    var oa = order[ba.c]!==undefined ? order[ba.c] : 5;
+    var ob = order[bb.c]!==undefined ? order[bb.c] : 5;
+    if(oa!==ob) return oa-ob;
+    if(ba.d!==null && bb.d!==null) return ba.d-bb.d;
+    return 0;
+  });
+
+  var cont = document.getElementById('lista-container');
+  if(filtered.length===0){
+    cont.innerHTML='<div class="empty">Nenhum processo encontrado.</div>';
+    return;
+  }
+
+  var rows='';
+  for(var j=0;j<filtered.length;j++){
+    var p=filtered[j];
+    var b=getBadge(p);
+    var sus = p.status==='suspenso'||p.status==='encerrado';
+    rows += '<tr>'+
+      '<td class="'+(sus?'tag-suspenso':'')+'">'+esc(p.numeroProcesso)+'</td>'+
+      '<td>'+esc(p.numeroSEI||'')+'</td>'+
+      '<td>'+esc(p.parteContraria||'')+'</td>'+
+      '<td>'+fmt(p.prazoFinal)+'</td>'+
+      '<td><span class="badge '+b.c+'">'+b.l+'</span></td>'+
+      '<td>'+esc(p.acao||'')+'</td>'+
+      '<td class="acoes">'+
+        '<button class="bt-ed" onclick="editar(\''+p.id+'\')">✏ Editar</button>'+
+        (p.status==='ativo' ? '<button class="bt-ok" onclick="cumprir(\''+p.id+'\')">✔ Cumprido</button>' : '')+
+        '<button class="bt-del" onclick="excluir(\''+p.id+'\')">🗑</button>'+
+      '</td>'+
+      '</tr>';
+  }
+
+  cont.innerHTML =
+    '<table>'+
+    '<thead><tr>'+
+      '<th>Processo</th><th>SEI</th><th>Parte Contrária</th>'+
+      '<th>Prazo Final</th><th>Urgência</th><th>Ação</th><th>Ações</th>'+
+    '</tr></thead>'+
+    '<tbody>'+rows+'</tbody>'+
+    '</table>';
+}
+
+// ============================================================
+// AÇÕES
+// ============================================================
+function cumprir(id){
+  var p=getOne(id);
+  if(!p) return;
+  p.status='suspenso';
+  var now=new Date();
+  var quando=pad(now.getDate())+'/'+pad(now.getMonth()+1)+'/'+now.getFullYear();
+  p.observacoes=(p.observacoes?p.observacoes+'\n':'')+'[Cumprido em '+quando+']';
+  upsert(p);
+  renderLista();
+}
+
+function excluir(id){
+  if(!confirm('Excluir este processo?')) return;
+  remove(id);
+  renderLista();
+}
+
+function editar(id){
+  var p=getOne(id);
+  if(!p) return;
+  abrirModal(p);
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+var _editId = null;
+
+function abrirModal(p){
+  _editId = p ? p.id : null;
+  document.getElementById('modal-titulo').textContent = p ? 'Editar Processo' : 'Novo Processo';
+  document.getElementById('fProc').value    = p ? (p.numeroProcesso||'') : '';
+  document.getElementById('fSEI').value     = p ? (p.numeroSEI||'') : '';
+  document.getElementById('fParte').value   = p ? (p.parteContraria||'') : '';
+  document.getElementById('fDisp').value    = p ? (p.dataDisponibilizacao||'') : '';
+  document.getElementById('fPrazo').value   = p ? (p.prazo||'') : '';
+  document.getElementById('fTipo').value    = p ? (p.tipoPrazo||'uteis') : 'uteis';
+  document.getElementById('fStatus').value  = p ? (p.status||'ativo') : 'ativo';
+  document.getElementById('fAcao').value    = p ? (p.acao||'') : '';
+  document.getElementById('fResultado').value = p ? (p.resultado||'') : '';
+  document.getElementById('fHon').checked   = p ? !!p.honorarios : false;
+  document.getElementById('fObs').value     = p ? (p.observacoes||'') : '';
+  document.getElementById('overlay').className='overlay open';
+}
+
+function fecharModal(){
+  document.getElementById('overlay').className='overlay';
+  _editId=null;
+}
+
+function salvar(ev){
+  ev.preventDefault();
+  var proc = document.getElementById('fProc').value.trim();
+  if(!proc){ alert('Informe o número do processo.'); return; }
+
+  var disp   = document.getElementById('fDisp').value;
+  var prazo  = document.getElementById('fPrazo').value;
+  var tipo   = document.getElementById('fTipo').value;
+  var final  = calcFinal(disp, prazo, tipo);
+
+  var p = {
+    id:               _editId || gerarId(),
+    numeroProcesso:   proc,
+    numeroSEI:        document.getElementById('fSEI').value.trim(),
+    parteContraria:   document.getElementById('fParte').value.trim(),
+    dataDisponibilizacao: disp,
+    prazo:            prazo,
+    tipoPrazo:        tipo,
+    prazoFinal:       final,
+    status:           document.getElementById('fStatus').value,
+    acao:             document.getElementById('fAcao').value.trim(),
+    resultado:        document.getElementById('fResultado').value,
+    honorarios:       document.getElementById('fHon').checked,
+    observacoes:      document.getElementById('fObs').value.trim()
+  };
+
+  upsert(p);
+  fecharModal();
+  renderLista();
+}
+
+// ============================================================
+// EXPORTAR / IMPORTAR
+// ============================================================
 function exportar(){
-  let blob=new Blob([JSON.stringify({version:2,exportedAt:new Date().toISOString(),processos:all()},null,2)],{type:'application/json'})
-  let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='emlurb-backup-'+iso(new Date())+'.json';a.click()
+  var arr = loadAll();
+  var json = JSON.stringify(arr, null, 2);
+  var a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+  var now = new Date();
+  a.download = 'emlurb_backup_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
+
 function importar(ev){
-  let f=ev.target.files[0];if(!f)return
-  let r=new FileReader();r.onload=e=>{try{let d=JSON.parse(e.target.result),ps=d.processos||d;if(!Array.isArray(ps))throw new Error('Formato inválido');if(confirm('Importar '+ps.length+' processo(s)?\n\nIsso substituirá todos os dados atuais.')){save(ps);renderDash();alert(ps.length+' processo(s) importado(s).')}}catch(err){alert('Erro: '+err.message)}};r.readAsText(f);ev.target.value=''
+  var file = ev.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var data = JSON.parse(e.target.result);
+      if(!Array.isArray(data)){ alert('Arquivo inválido.'); return; }
+      // se tiver apenas os 3 campos (dados iniciais), mesclar sem sobrescrever existentes
+      var existing = loadAll();
+      var existMap = {};
+      for(var i=0;i<existing.length;i++) existMap[existing[i].id] = true;
+      var added=0, updated=0;
+      for(var j=0;j<data.length;j++){
+        var p=data[j];
+        if(!p.id) p.id=gerarId();
+        if(existMap[p.id]){ updated++; }
+        else { added++; }
+        upsert(p);
+      }
+      alert('Importação concluída!\nAdicionados: '+added+'\nAtualizados: '+updated);
+      renderLista();
+      renderDash();
+    } catch(err){
+      alert('Erro ao ler arquivo: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value='';
 }
-function recarregarDados(){
-  if(confirm('Recarregar os 137 processos da planilha EMLURB?\n\nIsso substituirá todos os dados atuais.\nExporte um backup antes se necessário.')){
-    localStorage.removeItem('emlurb_v2');localStorage.removeItem('emlurb_data_version');location.reload()
-  }
+
+// ============================================================
+// HELPERS
+// ============================================================
+function esc(s){
+  if(!s) return '';
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
+
+// fechar modal clicando fora
+document.getElementById('overlay').addEventListener('click', function(e){
+  if(e.target===this) fecharModal();
+});
+
+// ============================================================
 // INIT
-;(function(){
-  var DATA_VERSION=4
-  var storedVer=parseInt(localStorage.getItem('emlurb_data_version')||'0')
-  if(storedVer<DATA_VERSION){
-    var inicial=[{"id":"ce2f3cbe-3aea-4c5d-9d65-b42ba2150ec0","numeroProcesso":"0041136-27.2024.8.17.8201","numeroSEI":"15.00954/2025-10","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c259e969-c4ac-4dd3-93ad-2ffc035c2216","numeroProcesso":"0816853-69.2021.4.05.8300","numeroSEI":"15.002080/2023-73","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"6f68f4ed-5f5f-4a18-b43c-ac4554519a00","numeroProcesso":"0046265-13.2024.8.17.8201","numeroSEI":"15.001210/2025-12","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"759e0a28-99f7-4433-b846-2620fcec5923","numeroProcesso":"0099848-83.2024.8.17.2001","numeroSEI":"05.000432/2025-37","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"6e77ff97-c747-442f-8e1c-706cea3cb653","numeroProcesso":"0039551-37.2024.8.17.8201","numeroSEI":"15010494/2024-57","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"cedcf1be-a5ee-43fe-ad96-591111c8a534","numeroProcesso":"15.010378/2024-38","numeroSEI":"15.010378/2024-38","parteContraria":"O presente pleito j\u00e1 foi analisado nos autos do SEI n\u00ba\u00a015.008825/2024.","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"968f4afd-be99-43b4-ac94-358414f37988","numeroProcesso":"0000702-64.2022.8.17.8201","numeroSEI":"15.008690/2024-61","parteContraria":"verifiquei em 08.04.2025","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0f244209-4462-40c5-8e3f-0e4287540bb5","numeroProcesso":"0038616-36.2020.8.17.8201","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"154a781a-234d-437e-8f19-0b0f2a42d318","numeroProcesso":"0008065-06.2022.4.05.8300","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"78ef3b77-a606-4e99-bcbc-3e1cd1509028","numeroProcesso":"0048215-57.2024.8.17.8201","numeroSEI":"15.002659/2025-06","parteContraria":"solicitei unforma\u00e7\u00f5es a DEPA em 08.04.2025","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"1d79437a-7a38-408a-8d20-37bb19cdc293","numeroProcesso":"0046002-64.2018.8.17.2001","numeroSEI":"15.002660/2025-22","parteContraria":"solicitei unforma\u00e7\u00f5es a DEPA em 08.04.2025","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"3624954c-3a66-4456-8541-ed779c38207f","numeroProcesso":"0041052-26.2024.8.17.8201","numeroSEI":"15.002628/2025-47","parteContraria":"GILSON GUILHERME RODRIGUES FIRMINO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e0affec7-5518-4386-9707-4f922a356761","numeroProcesso":"0031823-42.2024.8.17.8201","numeroSEI":"15.000897/2025-79","parteContraria":"ARQUIMEDES CORREIA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"9ec77482-7819-4b92-bbf7-cb52c702d6e1","numeroProcesso":"0041542-48.2024.8.17.8201","numeroSEI":"15.002636/2025-93","parteContraria":"SILVIO PESSOA DE FREITAS FILHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c90cc6fb-390a-44be-8c0d-7e4a0e030d91","numeroProcesso":"0051647-84.2024.8.17.8201","numeroSEI":"15.002638/2025-82","parteContraria":"GERALDO DA CONCEICAO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a6d0db73-8d8e-461d-81e9-e1d34b7b5e6f","numeroProcesso":"0052396-04.2024.8.17.8201","numeroSEI":"15.000901/2025-07","parteContraria":"C\u00c1SSIO ANT\u00d4NIO BARBOSA DIAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"653c1eea-780b-44a6-a93a-26f5b42ea704","numeroProcesso":"0042786-12.2024.8.17.8201","numeroSEI":"15.000953/2025-75","parteContraria":"JOSE CARLOS RODRIGUES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"4730c8d4-e496-4ec4-bef7-a6df4d29c276","numeroProcesso":"0042828-61.2024.8.17.8201","numeroSEI":"15.000950/2025-31","parteContraria":"ARIELSON HONORIO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"7fc1fe3f-bce1-4b62-969e-508f36591c74","numeroProcesso":"0050060-27.2024.8.17.8201","numeroSEI":"15.002143/2025-53","parteContraria":"CLAUDEMIR GOMES DE SALES FILHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"f6c903fa-28ea-4fee-9f3f-2036a443a20d","numeroProcesso":"0051265-91.2024.8.17.8201","numeroSEI":"15.000952/2025-21","parteContraria":"MARCELO\u00a0LUIZ\u00a0SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"91a85f96-54af-49d5-9da2-6bdbae491e56","numeroProcesso":"0053095-92.2024.8.17.8201","numeroSEI":"15.000899/2025-68","parteContraria":"ELVO MANOEL SALES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"00657772-77b3-42b5-8281-bc6b85c4944b","numeroProcesso":"0040831-43.2024.8.17.8201","numeroSEI":"15.000951/2025-86","parteContraria":"EDNALDO JOSE DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"9d867071-ddb0-4523-b665-2828204ed201","numeroProcesso":"0042618-10.2024.8.17.8201","numeroSEI":"15.000955/2025-64","parteContraria":"MARCELO CANDIDO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"53558210-98ec-4bf0-8247-6382e95d378c","numeroProcesso":"0035005-46.2023.8.17.2001","numeroSEI":"","parteContraria":"CONSTRUTORA SAM LTDA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"863a56c8-b635-442a-94af-3166fae153b0","numeroProcesso":"0070409-27.2024.8.17.2001","numeroSEI":"15.006155/2024-76","parteContraria":"ACQUATOOL CONSULTORIA S/S LTDA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"bf2d6c3e-2dfc-4525-b29e-ddd3d41fc8ff","numeroProcesso":"0033209-31.2008.8.17.0001","numeroSEI":"","parteContraria":"Ylo Jos\u00e9 Alves de Souza","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"270b3a66-b036-4beb-94e6-7189543b4d13","numeroProcesso":"0032902-56.2024.8.17.8201","numeroSEI":"15.009694/2024-67","parteContraria":"REGINALDO MARTINS DE FARIAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"18e90c5e-7e4f-4f56-a692-5dca760b68d2","numeroProcesso":"0019244-78.2011.8.17.0001","numeroSEI":"05.002100/2024-14","parteContraria":"ESP\u00d3LIO ALDEMIR CARVALHO SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"d29e4f70-dbb1-404f-a206-2b7eadf9c19b","numeroProcesso":"0043655-72.2024.8.17.8201","numeroSEI":"15.002640/2025-51","parteContraria":"JOS\u00c9 DAGMAR FRANCISCO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a6342767-c082-4663-b699-66d782b4a13b","numeroProcesso":"0045089-96.2024.8.17.8201","numeroSEI":"15.002641/2025-04","parteContraria":"GILSON JOS\u00c9 CONCEI\u00c7\u00c3O DE ALMEIDA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"1a5e47d2-c984-40f4-a4f2-4f8890f279af","numeroProcesso":"0048017-20.2024.8.17.8201","numeroSEI":"15.002645/2025-84","parteContraria":"JOS\u00c9 LUCIANO DO NASCIMENTO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"b21817df-f1b7-41fd-b8d6-ee1d958147a3","numeroProcesso":"0046608-09.2024.9.17.8201","numeroSEI":"15.002646/2025-29","parteContraria":"Lucas Ernandes","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"583dda01-dc38-461c-b28e-e522b4edda87","numeroProcesso":"0047114-82.2024.8.17.8201","numeroSEI":"15.002661/2025-77","parteContraria":"PAULINO SEVERINO DOS SANTOS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"4ef5ce39-d642-4c00-9a5e-6d6dafc48e56","numeroProcesso":"0018972-68.2024.8.17.8201","numeroSEI":"15.001148/2025-69","parteContraria":"RONALDO PEREIRA DO NASCIMENTO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"dd37b644-9284-4a5b-9011-69af68b8ed6f","numeroProcesso":"0042547-08.2024.8.17.8201","numeroSEI":"15.000946/2025-73","parteContraria":"WELLINGTON JOS\u00c9 DOMINGOS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"21367caf-5a7b-42aa-acb7-a7192b26b2b3","numeroProcesso":"0045327-18.2024.8.17.8201","numeroSEI":"15.000949/2025-15","parteContraria":"JOSE JORGE HONORATO DE ANDRADE E SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"47c3ed24-976d-4161-8f02-6660a2530c0c","numeroProcesso":"0037694-53.2024.8.17.8201","numeroSEI":"","parteContraria":"AMARO MELQUIADES DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"3ffc4b26-c751-49fc-b342-ec1e921a3c35","numeroProcesso":"0029623-62.2024.8.17.8201","numeroSEI":"15.001681/2025-21","parteContraria":"ANANIAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c38adbe6-c128-466f-a74c-69a3d297f4ea","numeroProcesso":"0046279-94.2024.8.17.8201","numeroSEI":"15.010099/2024-74","parteContraria":"EDVALDO REINALDO DE VASCONCELOS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0aabf035-854d-44fd-887f-0022c12e3d90","numeroProcesso":"0043983-36.2023.8.17.8201","numeroSEI":"","parteContraria":"JOSE XAVIER DOS SANTOS FILHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"7a0e68bf-2261-47f2-b614-262668be9e5b","numeroProcesso":"0020074-67.2020.8.17.8201","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"fd3b738a-a02e-4cda-9bfe-c9fe855b7828","numeroProcesso":"0028846-77.2024.8.17.8201","numeroSEI":"","parteContraria":"ADEMILSON JOSE DE SOUZA DA HORA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"47603110-f1dc-4c9a-b188-ffb8b6da60e8","numeroProcesso":"0046608-09.2024.8.17.8201","numeroSEI":"15.002646/2025-29","parteContraria":"LUCAS FERNANDES DE ARAUJO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"ecdc143e-cb27-40de-b004-268be2e7e9b3","numeroProcesso":"0029646-08.2024.8.17.8201","numeroSEI":"","parteContraria":"IRAQUITAN INALDO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"283f08c0-eb81-4012-af8a-8bb17140298e","numeroProcesso":"0043962-26.2024.8.17.8201","numeroSEI":"15.003287/2025-27","parteContraria":"Eliseu melo patricio","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"1c0c7871-c975-4151-8664-6423d2e931e3","numeroProcesso":"0042577-43.2024.8.17.8201","numeroSEI":"15.008358/2024-05","parteContraria":"ADEMILSON JOS\u00c9 DE SOUZA DA HORA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"94207db9-266f-463d-86dd-8059796f68db","numeroProcesso":"0051762-08.2024.8.17.8201","numeroSEI":"15.003426/2025-12","parteContraria":"JOS\u00c9 ANT\u00d4NIO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e9bfaec7-2f54-4963-8781-1a8428ad9a6b","numeroProcesso":"0007841-62.2025.8.17.8201","numeroSEI":"15.003436/2025-58","parteContraria":"JOS\u00c9 FLORENCIO CAVALCANTI FILHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"fcd1f2be-a00f-48df-afdd-231b908fd4d2","numeroProcesso":"0007542-85.2025.8.17.8201","numeroSEI":"15.003439/2025-91","parteContraria":"PEDRO DE OLIVEIRA PINHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"8047b768-9a46-48f5-96ae-c0936d734d7a","numeroProcesso":"0043676-48.2024.8.17.8201","numeroSEI":"15.003440/2025-16","parteContraria":"JOS\u00c9 FRANCISCO DE ARA\u00daJO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a1d6e3ec-7ab2-4981-ab72-80801ecbd93d","numeroProcesso":"0014355-31.2025.8.17.8201","numeroSEI":"15.003441/2025-61","parteContraria":"F\u00c1BIO JOS\u00c9 DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"34c58ab8-302f-499a-b6ce-35163a71f217","numeroProcesso":"0005245-08.2025.8.17.8201","numeroSEI":"15.003464/2025-75","parteContraria":"LUIZ CARLOS DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"ba99ac59-e637-45d6-8b5f-9d5f55351c02","numeroProcesso":"0015114-92.2025.8.17.8201","numeroSEI":"15.003465/2025-10","parteContraria":"MANOEL ANTONIO VIEIRA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"13b5cca8-92af-4b01-8fe7-8000ab89fb59","numeroProcesso":"0031857-17.2024.8.17.8201","numeroSEI":"15.003466/2025-64","parteContraria":"JOS\u00c9 JUSTINO DO NASCIMENTO FILHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a2ce89fd-43e7-450a-acde-261f7570b245","numeroProcesso":"0053415-45.2024.8.17.8201","numeroSEI":"15.003467/2025-17","parteContraria":"IZAIAS ESTEV\u00c3O DIAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a6238c79-bfe7-4850-8721-6514278d947d","numeroProcesso":"0014326-78.2025.8.17.8201","numeroSEI":"15.004059/2025-74","parteContraria":"ANT\u00d4NIO BATISTA DOS SANTOS FILHO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a25c93fe-f07b-4636-853b-8cb79ac2d26b","numeroProcesso":"0013605-29.2025.8.17.8201","numeroSEI":"15.004062/2025-98","parteContraria":"ADEILSON ALVES REIS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"2750d488-6755-4a9a-901f-3f4f7c290a4b","numeroProcesso":"0014393-43.2025.8.17.8201","numeroSEI":"15.004065/2025-21","parteContraria":"PAULO JOS\u00c9 DE AQUINO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"eacc2f52-9059-420f-8db0-995538b9449d","numeroProcesso":"0014382-14.2025.8.17.8201","numeroSEI":"15.004069/2025-18","parteContraria":"JOSIAS BEZERRA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"b2661bae-d81e-4793-9c2a-ecfe95236aeb","numeroProcesso":"0036597-86.2022.8.17.8201","numeroSEI":"15.004271/2025-31","parteContraria":"RICARDO SILVA MARTINS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"f5e848d6-8a2b-42c3-9170-1dffb486f5d7","numeroProcesso":"0107975-15.2021.8.17.2001","numeroSEI":"","parteContraria":"CONDOM\u00cdNIO DO EDF QUAZAR","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"453189de-3fcf-4d85-9070-1c01d40008a1","numeroProcesso":"0018348-82.2025.8.17.8201","numeroSEI":"15.004820/2025-78","parteContraria":"HELIO VIEIRA DE SOUZA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"9d41ace3-d561-42a3-80ca-23440505683f","numeroProcesso":"0013470-17.2025.8.17.8201","numeroSEI":"15.004270/2025-97","parteContraria":"ADEILDO MACIEL ALVES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"9d3c0ddf-7977-47ad-b549-be79c88d43bd","numeroProcesso":"0051134-19.2024.8.17.8201","numeroSEI":"15.004890/2025-26","parteContraria":"MARCOS ANTONIO DE SIQUEIRA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c7814c1c-18b7-479f-874d-142038d0bb4a","numeroProcesso":"0008502-41.2025.8.17.8201","numeroSEI":"15.005723/2025-01","parteContraria":"JOSE ROBERTO INACIO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"403a9931-8ea4-4f6c-9d3b-6af0559cf85c","numeroProcesso":"0042324-55.2024.8.17.8201","numeroSEI":"","parteContraria":"GENILDO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"2c9d35e9-fad4-4a3b-a698-2750f75a3920","numeroProcesso":"0006830-95.2025.8.17.8201","numeroSEI":"","parteContraria":"ILTON DE SOUZA LEAO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"3a56d234-c056-45ba-a439-1cfcbbea1384","numeroProcesso":"0077590-45.2025.8.17.2001","numeroSEI":"","parteContraria":"ESTADO de PE - T\u00daNEL DA ABOLI\u00c7\u00c3O","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"d3b886a8-ce58-4c84-8709-e0233cd8fae3","numeroProcesso":"0052281-17.2023.8.17.8201","numeroSEI":"","parteContraria":"Elionaldo","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a979afce-69d6-4874-9496-aafe4c6f538e","numeroProcesso":"0042142-69.2024.8.17.8201","numeroSEI":"","parteContraria":"ELIAS FREIRE DE SANTANA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a413b4c7-2bba-42b2-9872-724ba49dd5ea","numeroProcesso":"0119575-62.2023.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"506fd853-6629-40a2-826f-6d42b833737e","numeroProcesso":"0106414-19.2022.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"7c8b8db7-b5c9-4656-a970-a7be9b549707","numeroProcesso":"0001012-17.2020.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"07132811-24d2-493a-8625-615d8dea2234","numeroProcesso":"0018362-66.2025.8.17.8201","numeroSEI":"","parteContraria":"MARIA DO CARMO SIMOES VIANA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"047d0f0e-ae11-4c95-898e-9e3113929957","numeroProcesso":"0128750-17.2022.8.17.2001","numeroSEI":"","parteContraria":"MARIA FLAUZILEIDE DE SOUZA CANUTO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"13c5771f-de56-441c-90fe-2e6540fbc278","numeroProcesso":"0005776-25.2025.8.17.9000","numeroSEI":"","parteContraria":"ACQUATOOL CONSULTORIA S/S LTDA. EPP","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"cefbde46-68a3-4ddd-9072-8544824a4c62","numeroProcesso":"0003374-40.2025.8.17.8201","numeroSEI":"15.001037/2026-33","parteContraria":"JUSCELINO GOMES DE AGUIAR","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"cc3dbc1f-d342-4992-bec2-7cb1b699e0b7","numeroProcesso":"0097525 - 08.2024.8:17.2001","numeroSEI":"15.001041/2026-00","parteContraria":"PAULO FERREIRA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e7bede57-6791-4419-8ec8-763449e9c88e","numeroProcesso":"0077336-44.2014.8.17.0001","numeroSEI":"","parteContraria":"CONDOMINIO DO EDIFICIO QUINTA DAS CAMELIAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"91aeb87d-0c3c-4219-b047-9156c6c92125","numeroProcesso":"0002287-49.2025.8.17.8201","numeroSEI":"15.001046/2026-24","parteContraria":"JOSE ARCELINO DA SILVA NETO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"1a1ac6cd-6af9-4249-8374-5f6b16d0b432","numeroProcesso":"0043243-44.2024.8.17.8201","numeroSEI":"15.001035/2026-44","parteContraria":"HEBERT BACELAR RODRIGUES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"7be50481-cfd4-4b05-bc70-b4d385adc707","numeroProcesso":"0005095-27.2025.8.17.8201","numeroSEI":"05.007559/2025-87","parteContraria":"RONALDO DE JESUS VIEIRA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"79ba5a90-c26e-4c7e-ad18-77e5e08af298","numeroProcesso":"0049806-54.2024.8.17.8201","numeroSEI":"15.001176/2026-67","parteContraria":"DANIEL SOTERO DOS SANTOS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e215f58c-0d96-4dbe-88e6-de172947d09b","numeroProcesso":"0022134-71.2024.8.17.8201","numeroSEI":"","parteContraria":"WILSON CANDIDO DE OLIVEIRA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"2d2bf9db-be5d-4e5c-a4c8-d67b21b693e9","numeroProcesso":"0012503-17.2014.8.17.0001","numeroSEI":"","parteContraria":"Irinaldo Ramos de Assun\u00e7\u00e3o","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"edbe3538-61bf-40bc-8b21-9876099e617b","numeroProcesso":"0090584-76.2023.8.17.2001","numeroSEI":"","parteContraria":"SOLL -SERVICOS OBRAS E LOCACOES LTDA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0abb497e-b90b-4b34-aa60-cc8be759424b","numeroProcesso":"0097525-08.2024.8.17.2001","numeroSEI":"15.001041/2026-00","parteContraria":"PAULO FERREIRA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"1dcb55d2-421b-4c3a-b2d5-c5c0e224e160","numeroProcesso":"0019115-77.2017.8.17.2001","numeroSEI":"","parteContraria":"35\u00ba Promotor de Justi\u00e7a de Defesa da Cidadania da Capital","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"5c93407f-b3e1-4b3e-b1a8-61d80a3b7cbd","numeroProcesso":"0041964-23.2024.8.17.8201","numeroSEI":"","parteContraria":"CRISTIANO PRIMO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"94624324-1f3a-4567-bcbb-61e58abafdcc","numeroProcesso":"0035963-85.2025.8.17.8201","numeroSEI":"15.001192/2026-50","parteContraria":"DANIEL BARBOSA DE FREITAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0c468319-9c4f-4019-bfa3-ea2f1fc6c7a7","numeroProcesso":"0032051-17.2024.8.17.8201","numeroSEI":"","parteContraria":"JUBIRACI JOSE DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"8e89dd5b-c325-4f4d-b897-1ba46bb80c2f","numeroProcesso":"0095690-48.2025.8.17.2001","numeroSEI":"","parteContraria":"IVANEIDE MONTE DE FREITAS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"20ee6b6b-1c7a-4fe0-bd23-5651d73cf950","numeroProcesso":"0111816-76.2025.8.17.2001","numeroSEI":"","parteContraria":"CARLOS ALBERTO SOUZA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"f7140336-f2e7-41ce-8d59-9340867be9a0","numeroProcesso":"0010007-67.2025.8.17.8201","numeroSEI":"15.001504/2026-25","parteContraria":"CLAUDIO DA SILVA GAIA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e289d3b0-cfdc-4cac-9e8b-dffe750b916c","numeroProcesso":"0042362-67.2024.8.17.8201","numeroSEI":"","parteContraria":"JOSE CARLOS VENTURA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"cba1953f-af6b-4420-b2ec-4f58bfe48eee","numeroProcesso":"0023736-78.2021.8.17.2001","numeroSEI":"","parteContraria":"Ambipar","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"7c71252f-cbef-47dd-8601-9a0e086d49fb","numeroProcesso":"0001441-32.2025.8.17.8201","numeroSEI":"15.001666/2026-63","parteContraria":"IRAN GOMES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c811a3be-c7c2-43f5-bf74-ff6320356322","numeroProcesso":"0005109-74.2026.8.17.8201","numeroSEI":"15.001848/2026-34","parteContraria":"ALEXSANDRO LEANDRO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"008e0ad3-8037-4236-837d-2bfdab4906f9","numeroProcesso":"0045812-18.2024.8.17.8201","numeroSEI":"15.001849/2026-89","parteContraria":"Jos\u00e9 Barbosa da Silva Filho","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"b585cada-b1a2-40aa-92a8-074ee23ac2fa","numeroProcesso":"0071078-51.2022.8.17.2001","numeroSEI":"","parteContraria":"CARLOS ANTONIO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"d67ddf02-55f3-4011-8c01-dc68085c4f84","numeroProcesso":"0006594-46.2025.8.17.8201","numeroSEI":"15.002023/2026-37","parteContraria":"SEVERINO FERNANDES GOMES DE CASTRO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c14229bf-19aa-4631-9377-d49db6d2defe","numeroProcesso":"0049600-40.2024.8.17.8201","numeroSEI":"15.002144/2026-89","parteContraria":"EVERALDO RICARDO DE OLIVEIRA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"2a693c20-01f6-4b00-89eb-2fcd03ecca2d","numeroProcesso":"0041917-49.2024.8.17.8201","numeroSEI":"","parteContraria":"JOSUEL TIMOTEO DE ANDRADE","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e2104de0-6e33-4ad8-9d81-07c11a40814b","numeroProcesso":"0043685-10.2024.8.17.8201","numeroSEI":"","parteContraria":"JOSE EDSON FERREIRA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"4f4c8521-ae1d-46e3-8cfd-b420365e5800","numeroProcesso":"0052109-41.2024.8.17.8201","numeroSEI":"","parteContraria":"MARIVALDO JOSE SOARES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"988f75f8-45df-423c-ac26-1464c786c894","numeroProcesso":"010007-67.2025.8.17.8201","numeroSEI":"","parteContraria":"CLAUDIO DA SILVA GAIA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a10916fa-d3cd-4752-b638-75d31b938b06","numeroProcesso":"0088610-43.2019.8.17.2001","numeroSEI":"","parteContraria":"35\u00ba Promotor de Justi\u00e7a de Defesa da Cidadania da Capital","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"6a987de0-72c5-4e9e-a9e1-6597ec6d0145","numeroProcesso":"0010388-46.2023.8.17.8201","numeroSEI":"15.002525/2026-68","parteContraria":"MARIA DE FATIMA DE LIMA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"3f837e38-ad73-4b7b-ac6b-2d1644234855","numeroProcesso":"0047356-41.2024.8.17.8201","numeroSEI":"15.002024/2026-81","parteContraria":"JOSE INALDO GOMES DE CASTRO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"6ec713a1-5638-402e-a842-2d5a7d1732e8","numeroProcesso":"0045140-78.2022.8.17.8201","numeroSEI":"15.002406/2026-13","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"ccdc537a-1791-464e-be7d-e1bd10a77de8","numeroProcesso":"0042805-18.2024.8.17.8201","numeroSEI":"15.002145/2026-23","parteContraria":"ERALDO MIGUEL DO NASCIMENTO","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"337a2a12-a6d9-4a57-aa78-e7d21ab5184f","numeroProcesso":"0046623-95.2017.8.17.2001","numeroSEI":"15.002428/2026-75","parteContraria":"MARCOS PEREIRA DOS SANTOS E OUTROS (4)","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0ddacaab-2a5b-4e32-abef-03aba3e4d36e","numeroProcesso":"0080133-89.2023.8.17.2001","numeroSEI":"","parteContraria":"BARTOLOMEU GENTIL DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"ae24e8cf-704e-468c-9a23-6190f95fb784","numeroProcesso":"0007673-07.2023.8.17.2001","numeroSEI":"15.001850/2026-11","parteContraria":"JURANDI BATISTA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"c6df7e2a-f282-4bbc-8553-c59455e87639","numeroProcesso":"0038360-20.2025.8.17.8201","numeroSEI":"15.002182/2026-31","parteContraria":"SEVERINO SILVINO CORREIA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"ae1e14dc-c776-4b91-a092-6269d946a07e","numeroProcesso":"0003505-15.2025.8.17.8201","numeroSEI":"","parteContraria":"PAULO ROBERTO FERREIRA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0c16832e-e47a-40d3-ae9e-8b86e115792a","numeroProcesso":"0050694-23.2024.8.17.8201","numeroSEI":"","parteContraria":"MARCOS ANTONIO DIONIZIO DOS PASSOS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a49afcbc-29b0-45cf-b470-7a627a79309a","numeroProcesso":"0042177-29.2024.8.17.8201","numeroSEI":"","parteContraria":"REQUERENTE: JUAREZ LOURENCO DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e8ab6d47-79ca-4fd4-a8aa-ed13b2f5d367","numeroProcesso":"0117741-24.2023.8.17.2001","numeroSEI":"","parteContraria":"DENISE DE HOLANDA DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"d46a0811-8098-425b-afe3-0caef6c44799","numeroProcesso":"0050463-93.2024.8.17.8201","numeroSEI":"","parteContraria":"JOSE GENUINO PEREIRA DOS SANTOS","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"219fb562-525b-4731-b8e3-acd8b2554714","numeroProcesso":"0051338-63.2024.8.17.8201","numeroSEI":"","parteContraria":"SEVERINO RAMOS DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"e5f3a1d7-f03b-4a89-8b9f-12ef5462f18a","numeroProcesso":"0052479-20.2024.8.17.8201","numeroSEI":"","parteContraria":"IVANILDO LUIZ DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"0514ea77-619d-48e5-ab6b-8bcb8de3e169","numeroProcesso":"0083193-07.2022.8.17.2001","numeroSEI":"","parteContraria":"MARIA GERUSA GOMES DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"22994643-0382-4320-8440-e919889d894c","numeroProcesso":"0105321-50.2024.8.17.2001","numeroSEI":"","parteContraria":"JOS\u00c9 AMAURILIO RODRIGUES","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"63fb582c-956d-43d7-97e8-def9e7c68c16","numeroProcesso":"PRAZOS","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"52426170-0a3e-4c32-93b0-c4e9bde2038e","numeroProcesso":"0035322-34.2024.8.17.8201","numeroSEI":"","parteContraria":"REQUERENTE: SILVIO ANDRE DA SILVA","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"63d76b6d-4a8b-469d-a821-90bfd6b7f802","numeroProcesso":"0019007-28.2024.8.17.8201","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"","status":"andamento","honorariosPendentes":false,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"b2bb0c2e-7a9d-466f-bc1b-357c7b1f10f8","numeroProcesso":"0021386-93.2016.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"79ea394f-3433-4dac-8768-997a3af1a730","numeroProcesso":"0157394-67.2022.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"70ef2e7b-d5d2-4736-91c0-b5dcfe50a638","numeroProcesso":"0030847-16.2021.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"78c5c5e1-5c77-481f-bf2e-9e9146a50c7b","numeroProcesso":"0035237-97.2019.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"6ad5bfd6-7146-4f94-b560-58631df86fb5","numeroProcesso":"0039848-98.2016.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a6b4221c-e6a8-4d8b-8cc3-322a1d443bbe","numeroProcesso":"0011314-71.2021.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"8f7ad034-ef56-47f8-9e10-84cdd594fe71","numeroProcesso":"0039606-61.2024.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"f6058d1c-c5af-430a-b70f-557a76bcac99","numeroProcesso":"0032114-62.2017.8.17.2001","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"a80454ef-cda5-4ac5-bf42-f5c54580b556","numeroProcesso":"0039607-41.2022.8.17.8201","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"},{"id":"09a7440a-ce2a-4d09-a6aa-4efadd40f0e2","numeroProcesso":"0012747-71.2020.8.17.8201","numeroSEI":"","parteContraria":"","dataDisponibilizacao":"","prazo":null,"tipoPrazo":"uteis","oQueFazer":"Executar honor\u00e1rios de \u00eaxito","status":"vitoria","honorariosPendentes":true,"observacoes":"","dataFinal":null,"createdAt":"2026-05-17T23:07:49.000Z","updatedAt":"2026-05-17T23:07:49.000Z"}]
-    localStorage.setItem('emlurb_v2',JSON.stringify(inicial))
-    localStorage.setItem('emlurb_data_version',String(DATA_VERSION))
-  }
-})()
-renderDash()
+// ============================================================
+renderDash();
 </script>
 </body>
 </html>
