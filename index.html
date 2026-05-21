@@ -684,9 +684,28 @@ var INITIAL_DATA = [{"id":"7895a4e4-e770-4336-bb11-da1613d5a892","numeroProcesso
 // INIT
 // ============================================================
 try {
-  var existing = loadAll();
-  if(existing.length === 0) {
-    saveAll(INITIAL_DATA);
+  // Se ainda não carregou os dados iniciais desta versão, carrega agora
+  // (substitui qualquer dado antigo de versões quebradas anteriores)
+  var DATA_INIT_KEY = 'emlurb_init_v6';
+  if(!localStorage.getItem(DATA_INIT_KEY)) {
+    // Mescla: mantém registros que o usuário já editou (por id), adiciona os novos
+    var prev = loadAll();
+    var prevMap = {};
+    for(var pi=0; pi<prev.length; pi++) prevMap[prev[pi].id] = prev[pi];
+    // carrega os 137 iniciais, mantendo edições do usuário se houver
+    var merged = [];
+    for(var ii=0; ii<INITIAL_DATA.length; ii++) {
+      var rec = INITIAL_DATA[ii];
+      merged.push(prevMap[rec.id] ? prevMap[rec.id] : rec);
+    }
+    // adiciona processos que o usuário criou manualmente (id não está nos iniciais)
+    var initIds = {};
+    for(var ij=0; ij<INITIAL_DATA.length; ij++) initIds[INITIAL_DATA[ij].id]=1;
+    for(var pk=0; pk<prev.length; pk++){
+      if(!initIds[prev[pk].id]) merged.push(prev[pk]);
+    }
+    saveAll(merged);
+    localStorage.setItem(DATA_INIT_KEY, '1');
   }
   renderDash();
 } catch(e) {
